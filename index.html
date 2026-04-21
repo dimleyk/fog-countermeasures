@@ -78,13 +78,17 @@ input[type=search]::placeholder{color:var(--muted);}
 .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc,var(--accent));opacity:0;transition:opacity .2s;border-radius:5px 5px 0 0;}
 .card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:10;}
 .card:hover::before{opacity:1;}
-.ch{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-.cnum{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);letter-spacing:1px;flex-shrink:0;}
-.ccat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border-radius:3px;white-space:nowrap;}
-.cvote{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:4px;padding:2px 8px;margin-left:auto;background:var(--surface);}
-.vbtn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;padding:4px;}
-.vbtn:hover{color:var(--accent);}
-.vcnt{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);min-width:20px;text-align:center;}
+.ch{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.cnum{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);letter-spacing:1px;flex-shrink:0;padding-top:4px;}
+.ccat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border-radius:3px;white-space:nowrap;margin-top:4px;}
+
+/* ENHANCED VOTE COMPONENT */
+.cvote{display:flex;flex-direction:column;align-items:center;gap:1px;border:1px solid var(--border);border-radius:10px;padding:6px 10px;margin-left:auto;background:var(--surface);min-width:56px;flex-shrink:0;position:relative;overflow:visible;transition:border-color .15s, box-shadow .15s;}
+.cvote:hover{border-color:var(--border-hi);box-shadow:0 2px 12px rgba(0,0,0,.07);}
+.vbtn{background:none;border:1px solid transparent;color:var(--muted);cursor:pointer;padding:5px 8px;border-radius:6px;transition:all .15s;line-height:1;width:38px;height:30px;display:flex;align-items:center;justify-content:center;}
+.vbtn.v-up:hover{color:#059669;background:rgba(5,150,105,.09);border-color:rgba(5,150,105,.3);}
+.vbtn.v-down:hover{color:#ef4444;background:rgba(239,68,68,.09);border-color:rgba(239,68,68,.3);}
+.vcnt{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;min-width:36px;text-align:center;transition:color .2s, transform .15s;}
 .cname{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);line-height:1.15;margin-top:4px;}
 .cdesc{font-size:13.5px;line-height:1.75;color:var(--text-dim);flex:1;}
 
@@ -129,6 +133,14 @@ input[type=search]::placeholder{color:var(--muted);}
 .ffill{height:100%;border-radius:2px;}
 .fval{font-family:'IBM Plex Mono',monospace;font-size:12px;margin-top:3px;font-weight:600;}
 .nores{grid-column:1/-1;text-align:center;padding:80px;font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:14px;}
+
+/* VOTE FLOAT ANIMATION */
+@keyframes vfloat{0%{opacity:1;transform:translateX(-50%) translateY(0) scale(1);}100%{opacity:0;transform:translateX(-50%) translateY(-28px) scale(.8);}}
+.vote-float{position:absolute;left:50%;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;pointer-events:none;animation:vfloat .65s ease-out forwards;z-index:200;white-space:nowrap;}
+.vote-float.up{color:#059669;top:-4px;}
+.vote-float.down{color:#ef4444;bottom:-4px;}
+@keyframes vcnt-pop{0%{transform:scale(1);}40%{transform:scale(1.3);}100%{transform:scale(1);}}
+.vcnt.pop{animation:vcnt-pop .22s ease-out;}
 
 body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999;}
 
@@ -326,19 +338,69 @@ document.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>{
 document.getElementById('search').oninput=e=>{aQ=e.target.value; rf();};
 
 document.getElementById('grid').addEventListener('click', (e) => {
-  if (e.target.classList.contains('v-up') || e.target.classList.contains('v-down')) {
-    const voteWrap = e.target.closest('.cvote');
-    const id = voteWrap.dataset.id;
-    const item = DATA.find(x => x.id == id);
-    if (e.target.classList.contains('v-up')) item.votes++;
-    if (e.target.classList.contains('v-down')) item.votes--;
-    if (aSort === 'votes-desc') {
-      rf();
-    } else {
-      voteWrap.querySelector('.vcnt').textContent = item.votes;
-    }
+  const btn = e.target.closest('.vbtn');
+  if (!btn) return;
+  const voteWrap = btn.closest('.cvote');
+  if (!voteWrap) return;
+  const id = voteWrap.dataset.id;
+  const item = DATA.find(x => x.id == id);
+  const isUp = btn.classList.contains('v-up');
+
+  if (isUp) item.votes++;
+  else item.votes--;
+
+  saveVotes();
+
+  // Floating +1/-1 animation
+  const floatEl = document.createElement('span');
+  floatEl.className = `vote-float ${isUp ? 'up' : 'down'}`;
+  floatEl.textContent = isUp ? '+1' : '−1';
+  voteWrap.appendChild(floatEl);
+  setTimeout(() => floatEl.remove(), 700);
+
+  if (aSort === 'votes-desc') {
+    rf();
+  } else {
+    const cnt = voteWrap.querySelector('.vcnt');
+    cnt.textContent = item.votes;
+    cnt.style.color = item.votes > 0 ? '#059669' : item.votes < 0 ? '#ef4444' : 'var(--cc, var(--accent))';
+    // Pop animation
+    cnt.classList.remove('pop');
+    void cnt.offsetWidth; // reflow
+    cnt.classList.add('pop');
+    setTimeout(() => cnt.classList.remove('pop'), 250);
   }
 });
+
+// ── VOTE PERSISTENCE (localStorage ← votes.json seed) ──────────────────────
+const VOTES_KEY = 'fog_countermeasures_votes_v1';
+
+function saveVotes() {
+  const votes = {};
+  DATA.forEach(d => { votes[d.id] = d.votes; });
+  localStorage.setItem(VOTES_KEY, JSON.stringify(votes));
+}
+
+async function loadVotes() {
+  const stored = localStorage.getItem(VOTES_KEY);
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      DATA.forEach(d => { d.votes = parsed[d.id] ?? 0; });
+    } catch(e) { /* ignore corrupt cache */ }
+  } else {
+    // Seed from votes.json in the repo
+    try {
+      const resp = await fetch('./votes.json');
+      if (resp.ok) {
+        const data = await resp.json();
+        DATA.forEach(d => { d.votes = data.votes?.[String(d.id)] ?? 0; });
+        saveVotes(); // cache locally
+      }
+    } catch(e) { /* silent — use zero votes */ }
+  }
+  rf();
+}
 
 function matchSlider(d){
   if(aCSlider>=5)return true;
@@ -472,9 +534,13 @@ function render(items){
         <div class="cnum">#${String(d.id+1).padStart(2,'0')}</div>
         <div class="ccat" style="background:color-mix(in srgb,${col} 15%,transparent);color:${col};border:1px solid color-mix(in srgb,${col} 40%,transparent)">${d.cat}</div>
         <div class="cvote" data-id="${d.id}">
-          <button class="vbtn v-up">▲</button>
-          <span class="vcnt" style="color:${col}">${d.votes}</span>
-          <button class="vbtn v-down">▼</button>
+          <button class="vbtn v-up" title="Upvote">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 4L3 15h18L12 4z"/></svg>
+          </button>
+          <span class="vcnt" style="color:${d.votes > 0 ? '#059669' : d.votes < 0 ? '#ef4444' : col}">${d.votes}</span>
+          <button class="vbtn v-down" title="Downvote">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 20L3 9h18L12 20z"/></svg>
+          </button>
         </div>
       </div>
       <div class="cname">${d.n}</div>
@@ -505,7 +571,8 @@ function rf(){
   renderTags(f);
 }
 
-rf();
+// Boot: load persisted votes then render
+loadVotes();
 </script>
 </body>
 </html>
