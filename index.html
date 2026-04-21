@@ -76,16 +76,42 @@ input[type=search]::placeholder{color:var(--muted);}
 
 /* card-body always flex-col so gap/spacing works in both views */
 .card-body{display:flex;flex-direction:column;gap:12px;flex:1;min-width:0;}
+/* In 2-col grid view the infographic sits below card-body, full width */
+.grid:not(.view-list) .cinfographic{margin-top:4px;}
 
-/* LIST VIEW */
+/* LIST VIEW — card splits into 50% info / 50% infographic */
 .grid.view-list{grid-template-columns:1fr;}
-.grid.view-list .card{flex-direction:row;align-items:flex-start;gap:0;}
-.grid.view-list .ch{flex-direction:column;align-items:center;gap:8px;min-width:72px;width:72px;flex-shrink:0;padding-right:18px;border-right:1px solid var(--border);margin-right:18px;}
-.grid.view-list .ch .ccat{font-size:9px;padding:2px 6px;text-align:center;white-space:normal;}
-.grid.view-list .cvote{margin-left:0;}
-.grid.view-list .card-body{gap:10px;}
-.grid.view-list .cinfographic{max-height:200px;overflow:hidden;}
-.grid.view-list .cinfographic img{height:200px;object-fit:cover;}
+.grid.view-list .card{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:auto 1fr;
+  gap:0 20px;
+  align-items:start;
+}
+.grid.view-list .ch{
+  grid-column:1 / -1;
+  border-bottom:1px solid var(--border);
+  padding-bottom:12px;
+  margin-bottom:4px;
+}
+.grid.view-list .card-body{
+  grid-column:1;
+  grid-row:2;
+  gap:10px;
+}
+.grid.view-list .cinfographic{
+  grid-column:2;
+  grid-row:2;
+  margin-top:0;
+  height:100%;
+  min-height:220px;
+}
+.grid.view-list .cinfographic img{
+  height:100%;
+  width:100%;
+  object-fit:cover;
+  border-radius:5px;
+}
 
 /* VIEW TOGGLE */
 .view-toggle{display:flex;gap:0;margin-left:12px;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
@@ -736,32 +762,32 @@ function render(items){
         </div>
       </div>
       <div class="card-body">
-      <div class="cname">${d.n}</div>
-      <div class="cdesc">${d.desc}</div>
-      ${evHtml}
+        <div class="cname">${d.n}</div>
+        <div class="cdesc">${d.desc}</div>
+        ${evHtml}
+        <div class="cfoot">
+          <div class="cm" style="position: relative;">
+            <div class="mlabel" style="display:flex;align-items:center;">Est. Cost ${bdHtml}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);line-height:1.5;margin-top:3px">${d.cost}</div>
+          </div>
+          <div class="cm">
+            <div class="mlabel">Cost Tier</div>
+            <span class="cbadge" style="background:color-mix(in srgb,${ctC} 15%,transparent);color:${ctC};border:1px solid color-mix(in srgb,${ctC} 40%,transparent)">${ctL}</span>
+          </div>
+          <div class="cm">
+            <div class="mlabel" style="display:flex;align-items:center;">Feasibility ${fjHtml}</div>
+            <div class="fval" style="color:${fc}">${d.feas}</div>
+            <div class="fbar"><div class="ffill" style="width:${fp}%;background:${fc}"></div></div>
+          </div>
+        </div>
+      </div>
       ${INFOGRAPHICS[d.id] ? `
         <div class="cinfographic">
           <img src="${INFOGRAPHICS[d.id]}" alt="Tactical infographic — ${d.n}"
                loading="lazy"
                onerror="this.closest('.cinfographic').style.display='none'">
           <span class="infog-label">Infographic</span>
-        </div>` : ''}
-      <div class="cfoot">
-        <div class="cm" style="position: relative;">
-          <div class="mlabel" style="display:flex;align-items:center;">Est. Cost ${bdHtml}</div>
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);line-height:1.5;margin-top:3px">${d.cost}</div>
-        </div>
-        <div class="cm">
-          <div class="mlabel">Cost Tier</div>
-          <span class="cbadge" style="background:color-mix(in srgb,${ctC} 15%,transparent);color:${ctC};border:1px solid color-mix(in srgb,${ctC} 40%,transparent)">${ctL}</span>
-        </div>
-        <div class="cm">
-          <div class="mlabel" style="display:flex;align-items:center;">Feasibility ${fjHtml}</div>
-          <div class="fval" style="color:${fc}">${d.feas}</div>
-          <div class="fbar"><div class="ffill" style="width:${fp}%;background:${fc}"></div></div>
-        </div>
-      </div>
-      </div>`;  /* close .card-body */
+        </div>` : ''}`;  /* infographic is sibling of card-body for list-view grid placement */
     g.appendChild(c);
   });
 }
