@@ -88,6 +88,10 @@ input[type=search]::placeholder{color:var(--muted);}
 .vbtn{background:none;border:1px solid transparent;color:var(--muted);cursor:pointer;padding:5px 8px;border-radius:6px;transition:all .15s;line-height:1;width:38px;height:30px;display:flex;align-items:center;justify-content:center;}
 .vbtn.v-up:hover{color:#059669;background:rgba(5,150,105,.09);border-color:rgba(5,150,105,.3);}
 .vbtn.v-down:hover{color:#ef4444;background:rgba(239,68,68,.09);border-color:rgba(239,68,68,.3);}
+.vbtn.v-up.voted{color:#fff;background:#059669;border-color:#059669;}
+.vbtn.v-up.voted:hover{background:#047857;border-color:#047857;}
+.vbtn.v-down.voted{color:#fff;background:#ef4444;border-color:#ef4444;}
+.vbtn.v-down.voted:hover{background:#dc2626;border-color:#dc2626;}
 .vcnt{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;min-width:36px;text-align:center;transition:color .2s, transform .15s;}
 .cname{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);line-height:1.15;margin-top:4px;}
 .cdesc{font-size:13.5px;line-height:1.75;color:var(--text-dim);flex:1;}
@@ -293,6 +297,7 @@ const DATA=[
 DATA.forEach((d, idx) => {
   d.id = idx;
   d.votes = 0;
+  d.myVote = 0;  // -1 | 0 | 1 — loaded from Supabase vote_records on boot
 });
 
 let aCat='all', aFeas=new Set(['all']), aCost=new Set(['all']), aCSlider=5, aQ='', aSort='default';
@@ -349,6 +354,21 @@ const SB_URL       = 'https://lfdfvbzjtdgtckqfntqn.supabase.co';
 const SB_ANON      = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmZGZ2YnpqdGRndGNrcWZudHFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NTg0NTUsImV4cCI6MjA5MjMzNDQ1NX0.UhzUG4QMymFy8cMmH2sTx0ToQKxQFcoLFIyTzvFbc8k';
 const SB_HEADERS   = { 'apikey': SB_ANON, 'Authorization': `Bearer ${SB_ANON}`, 'Content-Type': 'application/json' };
 const VOTES_LS_KEY = 'fog_countermeasures_votes_v2';
+const VOTER_ID_KEY = 'fog_voter_id';
+
+// ── Persistent anonymous voter identity (UUID stored in localStorage) ──────
+function getVoterId() {
+  let id = localStorage.getItem(VOTER_ID_KEY);
+  if (!id) {
+    // Generate a random UUID v4
+    id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    localStorage.setItem(VOTER_ID_KEY, id);
+  }
+  return id;
+}
 
 function setLiveIndicator(on) {
   document.getElementById('sb-dot').classList.toggle('live', on);
@@ -356,7 +376,7 @@ function setLiveIndicator(on) {
 
 // ── Load all votes on boot (cache → Supabase) ─────────────────────────────
 async function loadVotes() {
-  // Render instantly from localStorage cache while the network request runs
+  // Render instantly from localStorage cache while network request runs
   const cached = localStorage.getItem(VOTES_LS_KEY);
   if (cached) {
     try {
@@ -367,37 +387,57 @@ async function loadVotes() {
   }
 
   try {
-    const resp = await fetch(
-      `${SB_URL}/rest/v1/votes?select=item_id,count&order=item_id`,
-      { headers: SB_HEADERS }
-    );
-    if (!resp.ok) throw new Error(resp.status);
-    const rows = await resp.json();
+    const voterId = getVoterId();
+
+    // Parallel fetch: aggregate counts + this voter's existing votes
+    const [countResp, myResp] = await Promise.all([
+      fetch(`${SB_URL}/rest/v1/votes?select=item_id,count&order=item_id`, { headers: SB_HEADERS }),
+      fetch(`${SB_URL}/rest/v1/vote_records?select=item_id,value&voter_id=eq.${encodeURIComponent(voterId)}`, { headers: SB_HEADERS })
+    ]);
+
+    if (!countResp.ok) throw new Error(countResp.status);
+    const rows = await countResp.json();
     rows.forEach(row => {
       const d = DATA.find(x => x.id === row.item_id);
       if (d) d.votes = row.count;
     });
-    // Refresh localStorage cache with live data
+
+    // Apply this voter's prior votes (may 404 if vote_records table not yet created — gracefully skip)
+    if (myResp.ok) {
+      const myRows = await myResp.json();
+      myRows.forEach(row => {
+        const d = DATA.find(x => x.id === row.item_id);
+        if (d) d.myVote = row.value;  // 1 or -1
+      });
+    }
+
+    // Refresh localStorage cache
     const lv = {};
     DATA.forEach(d => { lv[d.id] = d.votes; });
     localStorage.setItem(VOTES_LS_KEY, JSON.stringify(lv));
     setLiveIndicator(true);
     rf();
   } catch(e) {
-    setLiveIndicator(false);  // stays grey — using cached votes
+    setLiveIndicator(false);
   }
 }
 
-// ── Atomic vote via Supabase RPC ───────────────────────────────────────────
-// Returns the confirmed server-side count (handles concurrent voters correctly).
-async function castVote(itemId, delta) {
-  const resp = await fetch(`${SB_URL}/rest/v1/rpc/vote`, {
-    method: 'POST',
-    headers: SB_HEADERS,
-    body: JSON.stringify({ p_item_id: itemId, p_delta: delta })
-  });
-  if (!resp.ok) throw new Error(resp.status);
-  return await resp.json();   // confirmed integer count from server
+// ── Update vote UI for a specific card ────────────────────────────────────
+function updateVoteUI(voteWrap, item) {
+  const cnt    = voteWrap.querySelector('.vcnt');
+  const upBtn  = voteWrap.querySelector('.vbtn.v-up');
+  const dnBtn  = voteWrap.querySelector('.vbtn.v-down');
+  if (!cnt) return;
+
+  cnt.textContent = item.votes;
+  cnt.style.color = item.votes > 0 ? '#059669' : item.votes < 0 ? '#ef4444' : 'var(--cc,var(--accent))';
+  cnt.classList.remove('pop');
+  void cnt.offsetWidth;
+  cnt.classList.add('pop');
+  setTimeout(() => cnt.classList.remove('pop'), 250);
+
+  upBtn.classList.toggle('voted', item.myVote === 1);
+  dnBtn.classList.toggle('voted', item.myVote === -1);
 }
 
 // ── Vote click handler ────────────────────────────────────────────────────
@@ -406,49 +446,83 @@ document.getElementById('grid').addEventListener('click', async (e) => {
   if (!btn) return;
   const voteWrap = btn.closest('.cvote');
   if (!voteWrap) return;
+  if (btn.disabled) return;
 
-  const id    = +voteWrap.dataset.id;
-  const item  = DATA.find(x => x.id === id);
-  const isUp  = btn.classList.contains('v-up');
-  const delta = isUp ? 1 : -1;
+  const id       = +voteWrap.dataset.id;
+  const item     = DATA.find(x => x.id === id);
+  const isUp     = btn.classList.contains('v-up');
+  const dir      = isUp ? 1 : -1;
+  const voterId  = getVoterId();
 
-  // 1. Optimistic UI update (instant feel)
-  item.votes += delta;
+  // Determine optimistic outcome (toggle/switch logic mirrors server)
+  const prevVote  = item.myVote || 0;
+  let   newVote, voteDelta;
+  if (prevVote === dir) {
+    // Same button clicked again → undo vote
+    newVote   = 0;
+    voteDelta = -dir;
+  } else if (prevVote !== 0) {
+    // Switched direction (up→down or down→up)
+    newVote   = dir;
+    voteDelta = 2 * dir;
+  } else {
+    // Fresh vote
+    newVote   = dir;
+    voteDelta = dir;
+  }
 
-  const updateDisplay = (count) => {
-    const cnt = voteWrap.querySelector('.vcnt');
-    if (!cnt) return;
-    cnt.textContent = count;
-    cnt.style.color = count > 0 ? '#059669' : count < 0 ? '#ef4444' : 'var(--cc,var(--accent))';
-    cnt.classList.remove('pop');
-    void cnt.offsetWidth;
-    cnt.classList.add('pop');
-    setTimeout(() => cnt.classList.remove('pop'), 250);
-  };
+  // Optimistic UI update
+  item.votes  += voteDelta;
+  item.myVote  = newVote;
 
-  // Floating +1/−1 animation
+  // Floating animation
   const floatEl = document.createElement('span');
-  floatEl.className = `vote-float ${isUp ? 'up' : 'down'}`;
-  floatEl.textContent = isUp ? '+1' : '−1';
+  floatEl.className = `vote-float ${voteDelta > 0 ? 'up' : 'down'}`;
+  floatEl.textContent = voteDelta > 0 ? `+${voteDelta}` : `${voteDelta}`;
   voteWrap.appendChild(floatEl);
   setTimeout(() => floatEl.remove(), 700);
 
   if (aSort === 'votes-desc') rf();
-  else updateDisplay(item.votes);
+  else updateVoteUI(voteWrap, item);
 
-  // 2. Persist to Supabase — atomic INCR/DECR, returns true server count
+  // Disable buttons briefly to prevent double-tap
+  voteWrap.querySelectorAll('.vbtn').forEach(b => b.disabled = true);
+
+  // Persist to Supabase via cast_vote RPC
   try {
-    const confirmedCount = await castVote(id, delta);
-    item.votes = confirmedCount;      // reconcile with server truth
+    const resp = await fetch(`${SB_URL}/rest/v1/rpc/cast_vote`, {
+      method: 'POST',
+      headers: SB_HEADERS,
+      body: JSON.stringify({ p_item_id: id, p_direction: dir, p_voter_id: voterId })
+    });
+
+    if (resp.ok) {
+      const result = await resp.json();
+      item.votes  = result.count;
+      item.myVote = result.your_vote;
+    } else {
+      // cast_vote not deployed yet — fall back to legacy vote() RPC
+      const legacyResp = await fetch(`${SB_URL}/rest/v1/rpc/vote`, {
+        method: 'POST',
+        headers: SB_HEADERS,
+        body: JSON.stringify({ p_item_id: id, p_delta: voteDelta })
+      });
+      if (legacyResp.ok) {
+        item.votes = await legacyResp.json();
+      }
+    }
+
     // Update cache
     const lv = JSON.parse(localStorage.getItem(VOTES_LS_KEY) || '{}');
-    lv[id] = confirmedCount;
+    lv[id] = item.votes;
     localStorage.setItem(VOTES_LS_KEY, JSON.stringify(lv));
+
     if (aSort === 'votes-desc') rf();
-    else updateDisplay(confirmedCount);
+    else updateVoteUI(voteWrap, item);
   } catch(err) {
-    // Supabase unreachable — optimistic value stands, will sync on next load
     console.warn('Vote sync failed, using optimistic value:', err);
+  } finally {
+    voteWrap.querySelectorAll('.vbtn').forEach(b => b.disabled = false);
   }
 });
 
@@ -584,11 +658,11 @@ function render(items){
         <div class="cnum">#${String(d.id+1).padStart(2,'0')}</div>
         <div class="ccat" style="background:color-mix(in srgb,${col} 15%,transparent);color:${col};border:1px solid color-mix(in srgb,${col} 40%,transparent)">${d.cat}</div>
         <div class="cvote" data-id="${d.id}">
-          <button class="vbtn v-up" title="Upvote">
+          <button class="vbtn v-up${d.myVote===1?' voted':''}" title="${d.myVote===1?'Remove upvote':'Upvote'}">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 4L3 15h18L12 4z"/></svg>
           </button>
           <span class="vcnt" style="color:${d.votes > 0 ? '#059669' : d.votes < 0 ? '#ef4444' : col}">${d.votes}</span>
-          <button class="vbtn v-down" title="Downvote">
+          <button class="vbtn v-down${d.myVote===-1?' voted':''}" title="${d.myVote===-1?'Remove downvote':'Downvote'}">
             <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 20L3 9h18L12 20z"/></svg>
           </button>
         </div>
