@@ -142,6 +142,39 @@ input[type=search]::placeholder{color:var(--muted);}
 @keyframes vcnt-pop{0%{transform:scale(1);}40%{transform:scale(1.3);}100%{transform:scale(1);}}
 .vcnt.pop{animation:vcnt-pop .22s ease-out;}
 
+/* SAVE STATUS BADGE */
+.save-badge{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;padding:3px 10px;border-radius:3px;border:1px solid transparent;opacity:0;transition:opacity .3s;pointer-events:none;margin-left:14px;vertical-align:middle;}
+.save-badge.show{opacity:1;}
+.save-badge.saving{color:var(--muted);border-color:var(--border);}
+.save-badge.ok{color:#059669;border-color:rgba(5,150,105,.3);background:rgba(5,150,105,.06);}
+.save-badge.err{color:#ef4444;border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.06);}
+.save-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* TOKEN MODAL */
+.token-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:3px;cursor:pointer;transition:all .15s;margin-top:10px;display:inline-flex;align-items:center;gap:6px;}
+.token-btn:hover{border-color:var(--accent);color:var(--accent);}
+.token-btn .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:background .2s;}
+.token-btn.linked .dot{background:#059669;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .2s;}
+.modal-overlay.open{opacity:1;visibility:visible;}
+.modal-box{background:#fff;border:1px solid var(--border-hi);border-radius:8px;padding:28px;width:min(480px,90vw);box-shadow:0 24px 80px rgba(0,0,0,.18);transform:translateY(8px);transition:transform .2s;}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);margin-bottom:6px;}
+.modal-sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.modal-sub a{color:var(--accent);}
+.modal-field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+.modal-label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);font-weight:600;}
+.modal-input{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:13px;border-radius:4px;outline:none;transition:border-color .15s;width:100%;}
+.modal-input:focus{border-color:var(--accent);}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
+.modal-btn{padding:8px 18px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all .15s;border:1px solid var(--border);}
+.modal-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.modal-btn.primary:hover{background:#0369a1;}
+.modal-btn.danger{color:#ef4444;border-color:rgba(239,68,68,.3);}
+.modal-btn.danger:hover{background:rgba(239,68,68,.07);}
+.modal-btn.ghost{color:var(--muted);}
+.modal-btn.ghost:hover{color:var(--text);border-color:var(--border-hi);}
+
 body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999;}
 
 @media (max-width: 768px) {
@@ -159,7 +192,13 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
     <div>
       <div class="threat-badge">Threat classification: fiber-optic guided — EW-immune — Ukraine active 2025</div>
       <h1>55 INNOVATIVE<br><span>FOG COUNTERMEASURES</span></h1>
-      <div class="subtitle">// R&amp;D · Military Procurement · Technical Reference · April 2026</div>
+      <div class="subtitle">
+        // R&amp;D · Military Procurement · Technical Reference · April 2026
+        <span class="save-badge" id="save-badge"></span>
+      </div>
+      <button class="token-btn" id="token-btn" onclick="openTokenModal()">
+        <span class="dot"></span> Configure Voting API
+      </button>
     </div>
     <div class="stats-row">
       <div class="stat"><div class="stat-num" id="vis-count">55</div><div class="stat-label">Showing</div></div>
@@ -206,6 +245,28 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
 </div>
 
 <div class="grid" id="grid"></div>
+
+<!-- TOKEN CONFIGURATION MODAL -->
+<div class="modal-overlay" id="token-modal" onclick="if(event.target===this)closeTokenModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title">Configure Voting API</div>
+    <div class="modal-sub">
+      Votes are saved to <code>votes.json</code> in the GitHub repo via the Contents API.
+      Provide a <a href="https://github.com/settings/tokens/new?scopes=repo&description=FOG+Votes" target="_blank">fine-grained PAT</a>
+      with <strong>Contents: read &amp; write</strong> on the <em>fog-countermeasures</em> repo.
+      The token is stored only in your browser's localStorage — never in the page source.
+    </div>
+    <div class="modal-field">
+      <label class="modal-label" for="token-input">GitHub Personal Access Token</label>
+      <input class="modal-input" id="token-input" type="password" placeholder="ghp_…" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn danger" onclick="clearToken()">Clear Token</button>
+      <button class="modal-btn ghost" onclick="closeTokenModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="saveToken()">Save &amp; Connect</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const ICONS = {
@@ -372,34 +433,167 @@ document.getElementById('grid').addEventListener('click', (e) => {
   }
 });
 
-// ── VOTE PERSISTENCE (localStorage ← votes.json seed) ──────────────────────
-const VOTES_KEY = 'fog_countermeasures_votes_v1';
+// ── VOTE PERSISTENCE — GitHub Contents API + localStorage cache ─────────────
+const REPO_OWNER   = 'dimleyk';
+const REPO_NAME    = 'fog-countermeasures';
+const VOTES_FILE   = 'votes.json';
+const API_URL      = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${VOTES_FILE}`;
+const VOTES_LS_KEY = 'fog_countermeasures_votes_v1';
+const TOKEN_LS_KEY = 'fog_github_pat';
 
-function saveVotes() {
-  const votes = {};
-  DATA.forEach(d => { votes[d.id] = d.votes; });
-  localStorage.setItem(VOTES_KEY, JSON.stringify(votes));
+let currentFileSha  = null;   // SHA required by GitHub API for PUT
+let saveDebounce    = null;
+
+// ── Token helpers ─────────────────────────────────────────────────────────
+function getToken()  { return localStorage.getItem(TOKEN_LS_KEY) || ''; }
+
+function openTokenModal() {
+  document.getElementById('token-input').value = getToken();
+  document.getElementById('token-modal').classList.add('open');
+}
+function closeTokenModal() {
+  document.getElementById('token-modal').classList.remove('open');
+}
+function saveToken() {
+  const t = document.getElementById('token-input').value.trim();
+  if (t) localStorage.setItem(TOKEN_LS_KEY, t);
+  else localStorage.removeItem(TOKEN_LS_KEY);
+  updateTokenBtn();
+  closeTokenModal();
+}
+function clearToken() {
+  localStorage.removeItem(TOKEN_LS_KEY);
+  document.getElementById('token-input').value = '';
+  updateTokenBtn();
+  closeTokenModal();
+}
+function updateTokenBtn() {
+  const btn = document.getElementById('token-btn');
+  btn.classList.toggle('linked', !!getToken());
+  btn.querySelector('.dot').style.background = getToken() ? '#059669' : 'var(--muted)';
 }
 
+// ── Save badge ────────────────────────────────────────────────────────────
+let badgeTimer = null;
+function showBadge(state, text) {           // state: 'saving' | 'ok' | 'err'
+  const b = document.getElementById('save-badge');
+  b.className = `save-badge show ${state}`;
+  b.textContent = text;
+  clearTimeout(badgeTimer);
+  if (state !== 'saving') badgeTimer = setTimeout(() => b.classList.remove('show'), 3000);
+}
+
+// ── Load votes from GitHub (no auth needed for public repos) ──────────────
 async function loadVotes() {
-  const stored = localStorage.getItem(VOTES_KEY);
+  try {
+    const resp = await fetch(API_URL, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (resp.ok) {
+      const meta = await resp.json();
+      currentFileSha = meta.sha;
+      const data = JSON.parse(atob(meta.content.replace(/\n/g, '')));
+      DATA.forEach(d => { d.votes = data.votes?.[String(d.id)] ?? 0; });
+      // Sync to localStorage cache
+      const lv = {};
+      DATA.forEach(d => { lv[d.id] = d.votes; });
+      localStorage.setItem(VOTES_LS_KEY, JSON.stringify(lv));
+      rf();
+      return;
+    }
+  } catch(e) { /* fall through to cache */ }
+
+  // Fallback: localStorage cache
+  const stored = localStorage.getItem(VOTES_LS_KEY);
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
       DATA.forEach(d => { d.votes = parsed[d.id] ?? 0; });
-    } catch(e) { /* ignore corrupt cache */ }
-  } else {
-    // Seed from votes.json in the repo
-    try {
-      const resp = await fetch('./votes.json');
-      if (resp.ok) {
-        const data = await resp.json();
-        DATA.forEach(d => { d.votes = data.votes?.[String(d.id)] ?? 0; });
-        saveVotes(); // cache locally
-      }
-    } catch(e) { /* silent — use zero votes */ }
+    } catch(e2) {}
   }
   rf();
+}
+
+// ── Save votes: localStorage immediately, then debounced GitHub PUT ────────
+function saveVotes() {
+  // 1. Instant localStorage cache
+  const lv = {};
+  DATA.forEach(d => { lv[d.id] = d.votes; });
+  localStorage.setItem(VOTES_LS_KEY, JSON.stringify(lv));
+
+  // 2. Debounced write to votes.json (batches rapid clicks)
+  clearTimeout(saveDebounce);
+  saveDebounce = setTimeout(pushToGithub, 1000);
+}
+
+async function pushToGithub() {
+  const token = getToken();
+  if (!token) {
+    showBadge('err', 'No token — votes saved locally only');
+    return;
+  }
+
+  showBadge('saving', 'Saving to votes.json…');
+
+  // If we lost the SHA (page refresh without load), fetch it first
+  if (!currentFileSha) {
+    try {
+      const r = await fetch(API_URL, {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'Authorization': `token ${token}`
+        }
+      });
+      if (r.ok) { currentFileSha = (await r.json()).sha; }
+    } catch(e) {
+      showBadge('err', 'Failed to fetch SHA');
+      return;
+    }
+  }
+
+  // Build updated votes.json payload
+  const payload = {
+    version: 1,
+    description: 'FOG Countermeasures — Community Votes Database',
+    lastUpdated: new Date().toISOString().split('T')[0],
+    votes: {}
+  };
+  DATA.forEach(d => { payload.votes[String(d.id)] = d.votes; });
+
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2) + '\n')));
+
+  try {
+    const resp = await fetch(API_URL, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `Update votes — ${new Date().toISOString()}`,
+        content: encoded,
+        sha: currentFileSha
+      })
+    });
+
+    if (resp.ok) {
+      const result = await resp.json();
+      currentFileSha = result.content.sha;   // update SHA for next PUT
+      showBadge('ok', 'votes.json saved ✓');
+    } else if (resp.status === 409) {
+      // Conflict: someone else pushed — refetch SHA and retry once
+      showBadge('saving', 'Conflict, retrying…');
+      currentFileSha = null;
+      setTimeout(pushToGithub, 600);
+    } else if (resp.status === 401 || resp.status === 403) {
+      showBadge('err', 'Token invalid or lacks repo write access');
+    } else {
+      showBadge('err', `GitHub error ${resp.status}`);
+    }
+  } catch(e) {
+    showBadge('err', 'Network error — votes saved locally');
+  }
 }
 
 function matchSlider(d){
@@ -571,7 +765,8 @@ function rf(){
   renderTags(f);
 }
 
-// Boot: load persisted votes then render
+// Boot: reflect token state, then load votes from GitHub
+updateTokenBtn();
 loadVotes();
 </script>
 </body>
