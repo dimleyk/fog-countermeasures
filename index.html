@@ -112,6 +112,11 @@ input[type=search]::placeholder{color:var(--muted);}
   object-fit:cover;
   border-radius:5px;
 }
+/* Comments and media gallery span full width in list view */
+.grid.view-list .ccomments,
+.grid.view-list .cmedia{
+  grid-column:1 / -1;
+}
 
 /* COMMENTS */
 .ccomments{margin-top:4px;border-top:1px solid var(--border);padding-top:12px;}
@@ -236,6 +241,35 @@ input[type=search]::placeholder{color:var(--muted);}
 @keyframes vcnt-pop{0%{transform:scale(1);}40%{transform:scale(1.3);}100%{transform:scale(1);}}
 .vcnt.pop{animation:vcnt-pop .22s ease-out;}
 
+
+/* MEDIA GALLERY */
+.cmedia{margin-top:4px;border-top:1px solid var(--border);padding-top:12px;}
+.media-toggle{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:0;transition:color .15s;}
+.media-toggle:hover{color:var(--accent);}
+.media-toggle svg{flex-shrink:0;}
+.media-badge{background:var(--accent2);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;min-width:16px;text-align:center;}
+.media-body{display:none;margin-top:10px;flex-direction:column;gap:0;}
+.media-body.open{display:flex;}
+.media-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;}
+.media-scroll::-webkit-scrollbar{height:4px;}
+.media-scroll::-webkit-scrollbar-track{background:var(--surface);border-radius:2px;}
+.media-scroll::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:2px;}
+.media-item{flex-shrink:0;width:220px;scroll-snap-align:start;display:flex;flex-direction:column;gap:5px;cursor:pointer;}
+.media-item.playing{width:340px;}
+.media-thumb{position:relative;width:100%;height:130px;border-radius:6px;overflow:hidden;background:#000;border:1px solid var(--border);}
+.media-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s,filter .2s;}
+.media-item:hover .media-thumb img{transform:scale(1.03);filter:brightness(.85);}
+.media-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);transition:background .15s;}
+.media-item:hover .media-play{background:rgba(0,0,0,.45);}
+.media-play-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;}
+.media-item:hover .media-play-btn{transform:scale(1.1);background:#fff;}
+.media-play-btn svg{margin-left:3px;}
+.media-item iframe{width:100%;height:130px;border:none;border-radius:6px;display:block;}
+.media-item.playing iframe{height:190px;}
+.media-cap{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.3px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.media-type-badge{position:absolute;top:6px;right:6px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;padding:2px 6px;border-radius:3px;font-weight:700;text-transform:uppercase;}
+.media-yt-badge{background:rgba(255,0,0,.85);color:#fff;}
+.media-img-badge{background:rgba(0,0,0,.55);color:#fff;}
 
 /* LIGHTBOX */
 .lightbox{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s;}
@@ -628,6 +662,55 @@ const INFOGRAPHICS = {
   54: `${SB_STORAGE}/infographic-54-spider-silk-barrier-web.png`,
 };
 
+// ── MEDIA GALLERY — curated videos & images for first 5 cards ───────────
+const MEDIA_GALLERY = {
+  0: {
+    videos: [
+      {id:'m2-p2srIRLI', title:'Ukraine Counters FOG Drones with Lasers'},
+      {id:'NwkOxXgAWZ0', title:'How FOG Drones Are Reshaping Modern Warfare'},
+      {id:'t6mp8NmsCIc', title:'36 Hours with a Fibre Optic Drone Squad'}
+    ],
+    images: [
+      {src:'https://cdn.mos.cms.futurecdn.net/v2/t:0,l:0,cw:1920,ch:1080,q:80,w:1920/DPHiq5HzfZZD7tNhKEBPtc.jpg', cap:'Motorized barbed-wire barrier snaps FOG tether — Ukraine combat footage'}
+    ]
+  },
+  1: {
+    videos: [
+      {id:'Lughc7ra3Rk', title:'Military Tech to Combat Jamming-Resistant Fibre Drones'},
+      {id:'EFei7xNkbSY', title:'UNSTOPPABLE Drones Via 12-Mile Fiber Optic Wires'},
+      {id:'m2-p2srIRLI', title:'Lasers Fry Fiber Cables — Ukraine FOG Defeat'}
+    ],
+    images: []
+  },
+  2: {
+    videos: [
+      {id:'5DkEwVHI9zk', title:'SkyWall Patrol Net Launcher System Demo'},
+      {id:'bFprHDhuhzc', title:'SkyWall 100 Anti-Drone Net System'},
+      {id:'sSlEZ03mS7k', title:'Fortem DroneHunter — Autonomous Net Capture'},
+      {id:'sURKOPtI9ME', title:'Counter-Drone Net Launcher in Action'}
+    ],
+    images: [
+      {src:'https://openworksengineering.com/wp-content/uploads/2019/02/SKYWALL100_Hero.jpg', cap:'SkyWall100 pneumatic net projector system'},
+      {src:'https://openworksengineering.com/wp-content/uploads/2019/02/SKYWALL100_03.jpg', cap:'SkyWall100 close-up detail view'}
+    ]
+  },
+  3: {
+    videos: [
+      {id:'SGNH7aKqEE0', title:'Soldier Cuts FOG Cable — Drone Crashes Immediately'},
+      {id:'ZaeBn7rIxfg', title:'Cutting FOG Drone Fiber Cable Mid-Flight'},
+      {id:'0cPemNetoNk', title:'FOG Drone vs AI Interceptor: Drones Faceoff'}
+    ],
+    images: []
+  },
+  4: {
+    videos: [
+      {id:'z68_IVKgrZs', title:'Underwater Drones Guard EU Critical Infrastructure'},
+      {id:'3c9FXR5YmkI', title:'Underwater Drones in Modern Defence Operations'}
+    ],
+    images: []
+  }
+};
+
 // ── VOTE PERSISTENCE — Supabase (atomic, multi-user safe) ─────────────────
 const SB_URL       = 'https://lfdfvbzjtdgtckqfntqn.supabase.co';
 const SB_ANON      = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmZGZ2YnpqdGRndGNrcWZudHFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NTg0NTUsImV4cCI6MjA5MjMzNDQ1NX0.UhzUG4QMymFy8cMmH2sTx0ToQKxQFcoLFIyTzvFbc8k';
@@ -932,6 +1015,46 @@ function render(items){
     const c=document.createElement('div');
     c.className='card';
     c.style.cssText=`--cc:${col}`;
+
+    // ── Media gallery (cards 0-4 only) ──────────────────────────────────
+    const gallery = MEDIA_GALLERY[d.id];
+    let mediaHtml = '';
+    if (gallery && (gallery.videos.length || gallery.images.length)) {
+      const total = gallery.videos.length + gallery.images.length;
+      const videoItems = gallery.videos.map(v => `
+        <div class="media-item" onclick="playVideo(this,'${v.id}')">
+          <div class="media-thumb">
+            <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${escHtml(v.title)}" loading="lazy" onerror="this.style.opacity='.25'">
+            <div class="media-play">
+              <div class="media-play-btn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="#ea580c"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+            <span class="media-type-badge media-yt-badge">YT</span>
+          </div>
+          <div class="media-cap">${escHtml(v.title)}</div>
+        </div>`).join('');
+      const imageItems = gallery.images.map(img => `
+        <div class="media-item" onclick="openLightbox('${img.src}','${img.cap.replace(/'/g,"\\'")}')">
+          <div class="media-thumb">
+            <img src="${img.src}" alt="${escHtml(img.cap)}" loading="lazy" onerror="this.closest('.media-item').style.display='none'">
+            <span class="media-type-badge media-img-badge">IMG</span>
+          </div>
+          <div class="media-cap">${escHtml(img.cap)}</div>
+        </div>`).join('');
+      mediaHtml = `
+        <div class="cmedia">
+          <button class="media-toggle" onclick="toggleMedia(this,${d.id})">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
+            Media
+            <span class="media-badge">${total}</span>
+          </button>
+          <div class="media-body" id="media-body-${d.id}">
+            <div class="media-scroll">${videoItems}${imageItems}</div>
+          </div>
+        </div>`;
+    }
+
     c.innerHTML=`
       <div class="ch">
         <div class="cnum">#${String(d.id+1).padStart(2,'0')}</div>
@@ -986,7 +1109,8 @@ function render(items){
             <button class="cc-submit" onclick="submitComment(${d.id})">Post</button>
           </div>
         </div>
-      </div>`;  /* infographic + comments are siblings of card-body for list-view grid placement */
+      </div>
+      ${mediaHtml}`;  /* infographic + comments + media are siblings of card-body for list-view grid placement */
     g.appendChild(c);
   });
 }
@@ -1058,6 +1182,47 @@ function toggleComments(btn, itemId) {
   const body = document.getElementById(`cc-body-${itemId}`);
   const isOpen = body.classList.toggle('open');
   if (isOpen) loadComments(itemId);
+}
+
+// ── MEDIA GALLERY CONTROLS ────────────────────────────────────────────────
+function toggleMedia(btn, id) {
+  const body = document.getElementById(`media-body-${id}`);
+  if (!body) return;
+  const isOpen = body.classList.toggle('open');
+  btn.style.color = isOpen ? 'var(--accent2)' : '';
+}
+
+function playVideo(item, videoId) {
+  // If already playing this video, collapse it back to thumbnail
+  if (item.classList.contains('playing')) {
+    item.classList.remove('playing');
+    const thumb = item.querySelector('.media-thumb');
+    if (thumb) thumb.style.display = '';
+    const iframe = item.querySelector('iframe');
+    if (iframe) iframe.remove();
+    return;
+  }
+  // Collapse any other playing item in the same scroll row
+  const scroll = item.closest('.media-scroll');
+  if (scroll) {
+    scroll.querySelectorAll('.media-item.playing').forEach(p => {
+      p.classList.remove('playing');
+      const t = p.querySelector('.media-thumb');
+      if (t) t.style.display = '';
+      const f = p.querySelector('iframe');
+      if (f) f.remove();
+    });
+  }
+  // Embed YouTube player
+  item.classList.add('playing');
+  const thumb = item.querySelector('.media-thumb');
+  if (thumb) thumb.style.display = 'none';
+  const iframe = document.createElement('iframe');
+  iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+  iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+  iframe.allowFullscreen = true;
+  const cap = item.querySelector('.media-cap');
+  item.insertBefore(iframe, cap);
 }
 
 // Allow Ctrl+Enter to submit
