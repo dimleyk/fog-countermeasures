@@ -218,18 +218,125 @@ input[type=search]::placeholder{color:var(--muted);}
 @keyframes vcnt-pop{0%{transform:scale(1);}40%{transform:scale(1.3);}100%{transform:scale(1);}}
 .vcnt.pop{animation:vcnt-pop .22s ease-out;}
 
+/* Prevent tooltip overflow on mobile */
+@media (max-width: 768px) {
+  .info-tooltip { left: auto; right: 0; transform: translateX(0) translateY(4px); }
+  .info-wrap:hover .info-tooltip { transform: translateX(0) translateY(0); }
+  .info-tooltip::after { left: auto; right: 12px; transform: none; }
+}
+
 /* SUPABASE LIVE INDICATOR */
 .sb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-left:10px;vertical-align:middle;transition:background .4s;}
 .sb-dot.live{background:#059669;box-shadow:0 0 0 3px rgba(5,150,105,.2);}
 
 body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999;}
+/* Disable lift-on-hover on touch devices */
+@media (hover: none) {
+  .card:hover { transform: none; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+  .card:hover::before { opacity: 0; }
+}
 
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+
+/* Tablet (≤900px): single-column grid already set above */
+
+/* Tablet + large phones */
 @media (max-width: 768px) {
-    header { padding: 30px 20px; }
-    .header-inner { grid-template-columns: 1fr; text-align: left; }
-    .stats-row { justify-content: flex-start; margin-top: 20px; }
-    .grid { padding: 20px; grid-template-columns: 1fr; }
-    .filter-panel { padding: 0 20px; }
+  /* Header */
+  header { padding: 28px 16px 22px; }
+  .header-inner { grid-template-columns: 1fr; gap: 14px; }
+  h1 { font-size: clamp(32px, 9vw, 52px); }
+  .subtitle { font-size: 11px; }
+  .stats-row { justify-content: flex-start; gap: 16px; margin-top: 0; }
+  .stat-num { font-size: 26px; }
+
+  /* Filter panel */
+  .filter-panel { padding: 0 16px; }
+  .filter-section { gap: 8px; padding: 12px 0; }
+  .fgl { width: 72px; font-size: 10px; }
+  .fchips { gap: 5px; }
+  .chip { padding: 5px 10px; font-size: 10px; }
+
+  /* Range + search go full-width on their own row */
+  .range-wrap { width: 100%; flex-basis: 100%; }
+  input[type=range] { max-width: none; }
+  .search-wrap { margin-left: 0; width: 100%; flex-basis: 100%; }
+  input[type=search] { width: 100%; }
+
+  /* Active bar */
+  .active-bar { padding: 8px 16px; }
+
+  /* Sort bar */
+  .sort-bar { padding: 10px 16px; gap: 6px; }
+  .sbtn { padding: 4px 9px; font-size: 10px; }
+  .rcnt { font-size: 11px; }
+  /* Keep view toggle at end of sort bar */
+  .view-toggle { margin-left: auto; }
+
+  /* Grid */
+  .grid { padding: 16px 16px 48px; gap: 14px; }
+
+  /* Card */
+  .card { padding: 16px; gap: 10px; }
+  .cname { font-size: 19px; }
+  .cdesc { font-size: 13px; }
+
+  /* Card footer: stack cost/tier/feasibility vertically */
+  .cfoot { grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* Evidence */
+  .cevid { padding: 10px; }
+  .ev-desc { margin-left: 0; }
+
+  /* List view collapses to single column on tablet */
+  .grid.view-list .card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .grid.view-list .ch { grid-column: 1; }
+  .grid.view-list .card-body { grid-column: 1; grid-row: 2; }
+  .grid.view-list .cinfographic {
+    grid-column: 1; grid-row: 3;
+    min-height: 200px; height: 200px;
+  }
+
+  /* Comments */
+  .cc-form { flex-direction: column; }
+  .cc-submit { align-self: flex-end; }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  header { padding: 20px 12px 18px; }
+  .filter-panel { padding: 0 12px; }
+  .active-bar { padding: 8px 12px; }
+  .sort-bar { padding: 8px 12px; gap: 4px; }
+  .grid { padding: 12px 12px 40px; gap: 12px; }
+
+  /* Hide some sort buttons to prevent wrap chaos — keep essentials */
+  .sbtn[data-sort="feas-asc"],
+  .sbtn[data-sort="cost-desc"] { display: none; }
+
+  /* Squeeze the filter label down further */
+  .fgl { display: none; }
+  .filter-section { padding: 10px 0; }
+
+  /* Card */
+  .card { padding: 13px; }
+  .cname { font-size: 17px; }
+  .cnum { font-size: 14px; }
+
+  /* Card footer: single column on tiny screens */
+  .cfoot { grid-template-columns: 1fr; gap: 8px; }
+
+  /* Vote component */
+  .vcnt { font-size: 22px; }
+  .vbtn { width: 32px; height: 26px; }
+
+  /* Chips: allow horizontal scroll */
+  .fchips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  .fchips::-webkit-scrollbar { height: 2px; }
+  .fchips::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 1px; }
 }
 </style>
 </head>
