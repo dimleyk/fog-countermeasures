@@ -225,6 +225,17 @@ input[type=search]::placeholder{color:var(--muted);}
   .info-tooltip::after { left: auto; right: 12px; transform: none; }
 }
 
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s;}
+.lightbox.open{opacity:1;pointer-events:all;}
+.lightbox img{max-width:min(92vw,1100px);max-height:88vh;border-radius:8px;box-shadow:0 24px 80px rgba(0,0,0,.6);transform:scale(.94);transition:transform .22s;object-fit:contain;display:block;}
+.lightbox.open img{transform:scale(1);}
+.lb-close{position:fixed;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;backdrop-filter:blur(4px);line-height:1;}
+.lb-close:hover{background:rgba(255,255,255,.28);}
+.lb-caption{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);text-align:center;pointer-events:none;white-space:nowrap;}
+/* Clickable infographic cursor */
+.cinfographic img{cursor:zoom-in;}
+
 /* SUPABASE LIVE INDICATOR */
 .sb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-left:10px;vertical-align:middle;transition:background .4s;}
 .sb-dot.live{background:#059669;box-shadow:0 0 0 3px rgba(5,150,105,.2);}
@@ -1078,8 +1089,49 @@ vtGrid.addEventListener('click', () => applyView('grid'));
 // Restore last-used view (default: grid)
 applyView(localStorage.getItem(VIEW_KEY) || 'grid');
 
+// ── LIGHTBOX ──────────────────────────────────────────────────────────────
+const lb    = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbCap = document.getElementById('lb-caption');
+
+function openLightbox(src, alt) {
+  lbImg.src = src;
+  lbCap.textContent = alt || '';
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+  // slight delay before clearing src so close animation plays
+  setTimeout(() => { lbImg.src = ''; }, 200);
+}
+
+// Delegate click on any infographic image
+document.getElementById('grid').addEventListener('click', e => {
+  const img = e.target.closest('.cinfographic img');
+  if (!img) return;
+  openLightbox(img.src, img.closest('.card')?.querySelector('.cname')?.textContent);
+});
+
+// Close on backdrop click or close button
+lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+document.getElementById('lb-close').addEventListener('click', closeLightbox);
+
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && lb.classList.contains('open')) closeLightbox();
+});
+
 // Boot: load votes from Supabase (falls back to localStorage cache if offline)
 loadVotes();
 </script>
+
+<!-- LIGHTBOX OVERLAY -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lb-close" id="lb-close" aria-label="Close">&#x2715;</button>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-caption" id="lb-caption"></div>
+</div>
 </body>
 </html>
