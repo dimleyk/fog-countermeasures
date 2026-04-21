@@ -72,18 +72,24 @@ input[type=search]::placeholder{color:var(--muted);}
 
 /* GRID — default 2-col */
 .grid{max-width:1400px;margin:0 auto;padding:28px 40px 56px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+@media(max-width:900px){.grid{grid-template-columns:1fr;}}
+
+/* card-body always flex-col so gap/spacing works in both views */
+.card-body{display:flex;flex-direction:column;gap:12px;flex:1;min-width:0;}
+
+/* LIST VIEW */
 .grid.view-list{grid-template-columns:1fr;}
-.grid.view-list .card{flex-direction:row;align-items:flex-start;gap:20px;}
-.grid.view-list .ch{flex-direction:column;align-items:flex-start;gap:6px;min-width:60px;}
-.grid.view-list .cvote{margin-left:0;margin-top:4px;}
-.grid.view-list .card-body{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0;}
-.grid.view-list .cinfographic{max-width:340px;flex-shrink:0;}
-.grid.view-list .cinfographic img{height:180px;width:100%;object-fit:cover;}
-@media(max-width:860px){.grid{grid-template-columns:1fr;}}
+.grid.view-list .card{flex-direction:row;align-items:flex-start;gap:0;}
+.grid.view-list .ch{flex-direction:column;align-items:center;gap:8px;min-width:72px;width:72px;flex-shrink:0;padding-right:18px;border-right:1px solid var(--border);margin-right:18px;}
+.grid.view-list .ch .ccat{font-size:9px;padding:2px 6px;text-align:center;white-space:normal;}
+.grid.view-list .cvote{margin-left:0;}
+.grid.view-list .card-body{gap:10px;}
+.grid.view-list .cinfographic{max-height:200px;overflow:hidden;}
+.grid.view-list .cinfographic img{height:200px;object-fit:cover;}
 
 /* VIEW TOGGLE */
-.view-toggle{display:flex;gap:4px;margin-left:12px;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
-.vtbtn{background:transparent;border:none;padding:5px 9px;cursor:pointer;color:var(--muted);transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.view-toggle{display:flex;gap:0;margin-left:12px;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.vtbtn{background:transparent;border:none;padding:5px 10px;cursor:pointer;color:var(--muted);transition:all .15s;display:flex;align-items:center;justify-content:center;}
 .vtbtn:hover{background:var(--surface);color:var(--text);}
 .vtbtn.active{background:var(--accent);color:#fff;}
 
