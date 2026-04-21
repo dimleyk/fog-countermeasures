@@ -99,22 +99,25 @@ input[type=search]::placeholder{color:var(--muted);}
   grid-row:2;
   gap:10px;
 }
-.grid.view-list .cinfographic{
+.grid.view-list .ccarousel{
   grid-column:2;
   grid-row:2;
   margin-top:0;
   height:100%;
   min-height:220px;
 }
-.grid.view-list .cinfographic img{
+.grid.view-list .ccarousel .carousel-track,
+.grid.view-list .ccarousel .carousel-slide{
   height:100%;
-  width:100%;
-  object-fit:cover;
-  border-radius:5px;
 }
-/* Comments and media gallery span full width in list view */
-.grid.view-list .ccomments,
-.grid.view-list .cmedia{
+.grid.view-list .ccarousel .cs-img,
+.grid.view-list .ccarousel iframe{
+  height:100%;
+  min-height:220px;
+  object-fit:cover;
+}
+/* Comments span full width in list view */
+.grid.view-list .ccomments{
   grid-column:1 / -1;
 }
 
@@ -167,11 +170,30 @@ input[type=search]::placeholder{color:var(--muted);}
 .cname{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);line-height:1.15;margin-top:4px;}
 .cdesc{font-size:13.5px;line-height:1.75;color:var(--text-dim);flex:1;}
 
-/* INFOGRAPHIC */
-.cinfographic{margin-top:10px;border-radius:6px;overflow:hidden;border:1px solid var(--border);position:relative;background:var(--surface);}
-.cinfographic img{width:100%;display:block;border-radius:5px;transition:opacity .3s;}
-.cinfographic.loading{height:160px;display:flex;align-items:center;justify-content:center;}
-.infog-label{position:absolute;top:8px;left:8px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.5);padding:3px 8px;border-radius:3px;pointer-events:none;}
+/* CAROUSEL — unified infographic + media viewer */
+.ccarousel{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--border);background:var(--surface);margin-top:4px;user-select:none;}
+.carousel-track{display:flex;transition:transform .32s cubic-bezier(.4,0,.2,1);}
+.carousel-slide{flex-shrink:0;width:100%;position:relative;overflow:hidden;}
+.carousel-slide .cs-img{width:100%;height:260px;object-fit:cover;display:block;}
+.carousel-slide iframe{width:100%;height:260px;border:none;display:block;}
+.cs-thumb{position:relative;cursor:pointer;}
+.cs-play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28);transition:background .15s;}
+.cs-thumb:hover .cs-play-overlay{background:rgba(0,0,0,.5);}
+.cs-play-btn{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.96);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 16px rgba(0,0,0,.3);transition:transform .15s,box-shadow .15s;}
+.cs-thumb:hover .cs-play-btn{transform:scale(1.1);box-shadow:0 4px 24px rgba(0,0,0,.4);}
+.cs-cap{position:absolute;bottom:0;left:0;right:0;padding:22px 10px 8px;background:linear-gradient(transparent,rgba(0,0,0,.75));font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,.92);line-height:1.4;pointer-events:none;z-index:15;}
+.cs-badge{position:absolute;top:8px;left:8px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;z-index:15;pointer-events:none;}
+.cs-badge-infog{background:rgba(0,0,0,.5);color:#fff;}
+.cs-badge-yt{background:rgba(234,88,12,.9);color:#fff;}
+.cs-badge-img{background:rgba(0,0,0,.55);color:#fff;}
+.car-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:20;background:rgba(255,255,255,.88);backdrop-filter:blur(4px);border:none;color:var(--text);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:20px;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.18);padding:0;}
+.car-nav:hover{background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.25);}
+.car-prev{left:8px;}
+.car-next{right:8px;}
+.car-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:20;}
+.car-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer;transition:all .15s;border:none;padding:0;}
+.car-dot.active{background:#fff;transform:scale(1.2);}
+.carousel-slide.cs-infog{cursor:zoom-in;}
 
 /* EVIDENCE STYLING */
 .cevid { margin-top: 8px; background: rgba(0,0,0,0.02); border-radius: 6px; padding: 14px; border-left: 3px solid var(--cc, var(--accent)); box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); border-left-width: 3px; }
@@ -242,34 +264,7 @@ input[type=search]::placeholder{color:var(--muted);}
 .vcnt.pop{animation:vcnt-pop .22s ease-out;}
 
 
-/* MEDIA GALLERY */
-.cmedia{margin-top:4px;border-top:1px solid var(--border);padding-top:12px;}
-.media-toggle{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:0;transition:color .15s;}
-.media-toggle:hover{color:var(--accent);}
-.media-toggle svg{flex-shrink:0;}
-.media-badge{background:var(--accent2);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;min-width:16px;text-align:center;}
-.media-body{display:none;margin-top:10px;flex-direction:column;gap:0;}
-.media-body.open{display:flex;}
-.media-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;}
-.media-scroll::-webkit-scrollbar{height:4px;}
-.media-scroll::-webkit-scrollbar-track{background:var(--surface);border-radius:2px;}
-.media-scroll::-webkit-scrollbar-thumb{background:var(--border-hi);border-radius:2px;}
-.media-item{flex-shrink:0;width:220px;scroll-snap-align:start;display:flex;flex-direction:column;gap:5px;cursor:pointer;}
-.media-item.playing{width:340px;}
-.media-thumb{position:relative;width:100%;height:130px;border-radius:6px;overflow:hidden;background:#000;border:1px solid var(--border);}
-.media-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s,filter .2s;}
-.media-item:hover .media-thumb img{transform:scale(1.03);filter:brightness(.85);}
-.media-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);transition:background .15s;}
-.media-item:hover .media-play{background:rgba(0,0,0,.45);}
-.media-play-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s;}
-.media-item:hover .media-play-btn{transform:scale(1.1);background:#fff;}
-.media-play-btn svg{margin-left:3px;}
-.media-item iframe{width:100%;height:130px;border:none;border-radius:6px;display:block;}
-.media-item.playing iframe{height:190px;}
-.media-cap{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.3px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-.media-type-badge{position:absolute;top:6px;right:6px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px;padding:2px 6px;border-radius:3px;font-weight:700;text-transform:uppercase;}
-.media-yt-badge{background:rgba(255,0,0,.85);color:#fff;}
-.media-img-badge{background:rgba(0,0,0,.55);color:#fff;}
+/* (legacy media gallery styles removed — replaced by .ccarousel) */
 
 /* LIGHTBOX */
 .lightbox{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s;}
@@ -279,8 +274,7 @@ input[type=search]::placeholder{color:var(--muted);}
 .lb-close{position:fixed;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;backdrop-filter:blur(4px);line-height:1;}
 .lb-close:hover{background:rgba(255,255,255,.28);}
 .lb-caption{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);text-align:center;pointer-events:none;white-space:nowrap;}
-/* Clickable infographic cursor */
-.cinfographic img{cursor:zoom-in;}
+/* (infographic cursor now set on .carousel-slide.cs-infog above) */
 
 /* SUPABASE LIVE INDICATOR */
 .sb-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-left:10px;vertical-align:middle;transition:background .4s;}
@@ -352,9 +346,13 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
   }
   .grid.view-list .ch { grid-column: 1; }
   .grid.view-list .card-body { grid-column: 1; grid-row: 2; }
-  .grid.view-list .cinfographic {
+  .grid.view-list .ccarousel {
     grid-column: 1; grid-row: 3;
     min-height: 200px; height: 200px;
+  }
+  .grid.view-list .ccarousel .cs-img,
+  .grid.view-list .ccarousel iframe {
+    height: 200px; min-height: unset;
   }
 
   /* Comments */
@@ -662,7 +660,7 @@ const INFOGRAPHICS = {
   54: `${SB_STORAGE}/infographic-54-spider-silk-barrier-web.png`,
 };
 
-// ── MEDIA GALLERY — curated videos & images for first 5 cards ───────────
+// ── MEDIA GALLERY — curated videos & images per card ────────────────────
 const MEDIA_GALLERY = {
   0: {
     videos: [
@@ -706,6 +704,134 @@ const MEDIA_GALLERY = {
     videos: [
       {id:'z68_IVKgrZs', title:'Underwater Drones Guard EU Critical Infrastructure'},
       {id:'3c9FXR5YmkI', title:'Underwater Drones in Modern Defence Operations'}
+    ],
+    images: []
+  },
+  8: {
+    videos: [
+      {id:'ackgUZxIIz0', title:'High-Power Laser System for Anti-Drone Warfare'},
+      {id:'icgoq2adGOE', title:'Navy Laser Weapon Destroys 4 Drones'},
+      {id:'8WEvkJ0oaHk', title:'DRDO Anti-Drone Laser Weapon in Action'}
+    ],
+    images: []
+  },
+  14: {
+    videos: [
+      {id:'bP_dWvOQhnE', title:'Russian Ground Drone Creates Smoke Screen for Advance'},
+      {id:'FwEBBciBAhU', title:'Drone Smoke Screen Changes How Engineers Breach Defenses'},
+      {id:'unraT22a4zY', title:'Drone Swarms Are Here — This Technology Could Stop Them'}
+    ],
+    images: []
+  },
+  15: {
+    videos: [
+      {id:'k7xHNrFN5mo', title:'Rare Ukrainian Anti-Drone Ammunition — Is It Effective?'},
+      {id:'6IsXCaQz1gA', title:'Ukraine Creates Anti-Drone Rifle Round in 5.56mm NATO'},
+      {id:'bBqIWEanAg0', title:'Russian Soldier Turns 122mm Flechette Into Drone Trap'}
+    ],
+    images: []
+  },
+  17: {
+    videos: [
+      {id:'_LuZD52MFGw', title:'ASELSAN Gökdeniz 35mm CIWS Shoots Down Target Drone'},
+      {id:'rE50T3XcgCE', title:'40mm CIWS Drone Killer — Completed Trials'},
+      {id:'ms9xq-NkLis', title:'US Army Testing Newest Scary Drone Killer Gun'}
+    ],
+    images: []
+  },
+  18: {
+    videos: [
+      {id:'gsO3sYjQ9_o', title:'SkyWall 100 — World\'s First Drone Capturing Gun'},
+      {id:'7E7u6i-TSkI', title:'DroneCatcher — Catching a Drone with a Drone'},
+      {id:'PmvFC07pCbc', title:'This Drone Attacks and Captures Rogue Drones | CNBC'}
+    ],
+    images: []
+  },
+  22: {
+    videos: [
+      {id:'7faGZumWRZ4', title:'Acoustic Drone Detection Sensor System'},
+      {id:'wa5wJ-Q6qbk', title:'Drone Detection with Microphone Array'},
+      {id:'alqYrP53DIg', title:'Drone Detection & Tracking via Acoustic Signatures'}
+    ],
+    images: []
+  },
+  24: {
+    videos: [
+      {id:'dmGJxDVBTQc', title:'Using Passive Radars to Detect Drones'},
+      {id:'gThua7zvRoU', title:'Passive Drone Detection Explained'},
+      {id:'iGjPjz7CqbI', title:'Wireless Sensing for Aerial Drone Detection'}
+    ],
+    images: []
+  },
+  29: {
+    videos: [
+      {id:'IiZ7FMZeK5k', title:'AR-300 Drone Detection Radar System'},
+      {id:'igrN_wd_g74', title:'Build Your Own Drone Tracking Radar — Part 1'},
+      {id:'5VSIIFKK6Ck', title:'CW Drone Tracking Radar — Part 2'}
+    ],
+    images: []
+  },
+  30: {
+    videos: [
+      {id:'vLA826fH4Vc', title:'Epirus Leonidas: High-Power Microwave Counter-Electronics'},
+      {id:'5MZ7AmgvPdc', title:'Portable Microwave Weapon Takes Down Groups of Drones'},
+      {id:'hlmf032NmHU', title:'Raytheon High-Power Microwave Weapon Downs Drones'}
+    ],
+    images: []
+  },
+  35: {
+    videos: [
+      {id:'wFLzO_5UFwE', title:'US Tests Micro-Drone Swarms Deployed from Fighter Jets'},
+      {id:'L0fJ0EHHfOA', title:'Swarm of Micro Flying Robots in the Wild'},
+      {id:'hGakXrt1EFo', title:'China Unveils Atlas Drone Swarm System'}
+    ],
+    images: []
+  },
+  36: {
+    videos: [
+      {id:'0cPemNetoNk', title:'Drones Faceoff — Fiber-Optic vs AI for Modern Warfare'},
+      {id:'EFei7xNkbSY', title:'Ukraine\'s UNSTOPPABLE Drones via 12-Mile-Long Wires'},
+      {id:'UilUYRebGSY', title:'Ukrainians Track Russian FOG Drones by Following Cables'}
+    ],
+    images: []
+  },
+  38: {
+    videos: [
+      {id:'lNJKaUOqDtY', title:'Next-Gen Autonomous Drone Interceptor — 550 km/h Border Defense'},
+      {id:'j-z_ttyHZP8', title:'DJI Dock — Autonomous Security Patrol Drone'},
+      {id:'e69iI7Ls2PE', title:'AI-Powered Docked Drones for Smarter Intrusion Detection'}
+    ],
+    images: []
+  },
+  41: {
+    videos: [
+      {id:'bP_dWvOQhnE', title:'Russian Ground Drone Creates Smoke Screen for Advance'},
+      {id:'FwEBBciBAhU', title:'Drone Smoke Screen Changes Engineer Breach Tactics'},
+      {id:'BtkyoVOMvmY', title:'Smoke Drone Experiment — Obscuring With Aerosol'}
+    ],
+    images: []
+  },
+  47: {
+    videos: [
+      {id:'pmWXvfrg0Fs', title:'How Drone Decoys Are Changing Modern Warfare'},
+      {id:'twDyaz8UiZ4', title:'Mastering the Threat: Power of Infrared Decoy Flares'},
+      {id:'pQp_VOwAlgo', title:'Russian Helicopters Release Decoy Flares to Escape Missiles'}
+    ],
+    images: []
+  },
+  48: {
+    videos: [
+      {id:'GfdF3iIwoX4', title:'First-Hand Look at Ukraine\'s Thermal Invisibility Cloaks'},
+      {id:'wZb0ngE1WT0', title:'RECONDOR Counter-Thermal Anti-Drone Poncho Cloak'},
+      {id:'jdHEcomIj-E', title:'BAE Systems ADAPTIV Infra-Red Invisibility Cloak for Tanks'}
+    ],
+    images: []
+  },
+  53: {
+    videos: [
+      {id:'kAYVyj6vf3Y', title:'Watch Trained Eagles Take Down Drones in the Air'},
+      {id:'b8kZupqPbJs', title:'Eagles vs Drones — Birds Trained to Take Down UAVs'},
+      {id:'dc_ovddVRKE', title:'Eagles vs Drones: Dutch Police Train Birds of Prey'}
     ],
     images: []
   }
@@ -1016,44 +1142,55 @@ function render(items){
     c.className='card';
     c.style.cssText=`--cc:${col}`;
 
-    // ── Media gallery (cards 0-4 only) ──────────────────────────────────
+    // ── Build carousel slides (infographic + any media) ─────────────────
+    const carSlides = [];
+    if (INFOGRAPHICS[d.id]) {
+      carSlides.push(`
+        <div class="carousel-slide cs-infog" onclick="openLightbox('${INFOGRAPHICS[d.id]}','${escHtml(d.n)}')">
+          <img class="cs-img" src="${INFOGRAPHICS[d.id]}" alt="Tactical infographic — ${escHtml(d.n)}" loading="lazy"
+               onerror="this.closest('.ccarousel').style.display='none'">
+          <span class="cs-badge cs-badge-infog">Infographic</span>
+          <div class="cs-cap">AI-generated tactical diagram</div>
+        </div>`);
+    }
     const gallery = MEDIA_GALLERY[d.id];
-    let mediaHtml = '';
-    if (gallery && (gallery.videos.length || gallery.images.length)) {
-      const total = gallery.videos.length + gallery.images.length;
-      const videoItems = gallery.videos.map(v => `
-        <div class="media-item" onclick="playVideo(this,'${v.id}')">
-          <div class="media-thumb">
-            <img src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg" alt="${escHtml(v.title)}" loading="lazy" onerror="this.style.opacity='.25'">
-            <div class="media-play">
-              <div class="media-play-btn">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="#ea580c"><path d="M8 5v14l11-7z"/></svg>
+    if (gallery) {
+      gallery.videos.forEach(v => {
+        carSlides.push(`
+          <div class="carousel-slide">
+            <div class="cs-thumb" onclick="playCarVideo(this,'${v.id}')">
+              <img class="cs-img" src="https://img.youtube.com/vi/${v.id}/hqdefault.jpg"
+                   alt="${escHtml(v.title)}" loading="lazy" onerror="this.style.opacity='.2'">
+              <div class="cs-play-overlay">
+                <div class="cs-play-btn">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="#ea580c"><path d="M8 5v14l11-7z"/></svg>
+                </div>
               </div>
             </div>
-            <span class="media-type-badge media-yt-badge">YT</span>
-          </div>
-          <div class="media-cap">${escHtml(v.title)}</div>
-        </div>`).join('');
-      const imageItems = gallery.images.map(img => `
-        <div class="media-item" onclick="openLightbox('${img.src}','${img.cap.replace(/'/g,"\\'")}')">
-          <div class="media-thumb">
-            <img src="${img.src}" alt="${escHtml(img.cap)}" loading="lazy" onerror="this.closest('.media-item').style.display='none'">
-            <span class="media-type-badge media-img-badge">IMG</span>
-          </div>
-          <div class="media-cap">${escHtml(img.cap)}</div>
-        </div>`).join('');
-      mediaHtml = `
-        <div class="cmedia">
-          <button class="media-toggle" onclick="toggleMedia(this,${d.id})">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg>
-            Media
-            <span class="media-badge">${total}</span>
-          </button>
-          <div class="media-body" id="media-body-${d.id}">
-            <div class="media-scroll">${videoItems}${imageItems}</div>
-          </div>
-        </div>`;
+            <span class="cs-badge cs-badge-yt">YouTube</span>
+            <div class="cs-cap">${escHtml(v.title)}</div>
+          </div>`);
+      });
+      gallery.images.forEach(img => {
+        carSlides.push(`
+          <div class="carousel-slide" onclick="openLightbox('${img.src}','${img.cap.replace(/'/g,"\\'")}')">
+            <img class="cs-img" src="${img.src}" alt="${escHtml(img.cap)}" loading="lazy"
+                 onerror="this.closest('.carousel-slide').style.display='none'">
+            <span class="cs-badge cs-badge-img">Image</span>
+            <div class="cs-cap">${escHtml(img.cap)}</div>
+          </div>`);
+      });
     }
+    const total = carSlides.length;
+    const carNav = total > 1 ? `
+      <button class="car-nav car-prev" onclick="carMove(this,-1)">&#8249;</button>
+      <button class="car-nav car-next" onclick="carMove(this,+1)">&#8250;</button>
+      <div class="car-dots">${carSlides.map((_,i)=>`<button class="car-dot${i===0?' active':''}" onclick="carGoto(this.closest('.ccarousel'),${i})"></button>`).join('')}</div>` : '';
+    const carouselHtml = total > 0 ? `
+      <div class="ccarousel" data-idx="0" data-total="${total}">
+        <div class="carousel-track">${carSlides.join('')}</div>
+        ${carNav}
+      </div>` : '';
 
     c.innerHTML=`
       <div class="ch">
@@ -1089,13 +1226,7 @@ function render(items){
           </div>
         </div>
       </div>
-      ${INFOGRAPHICS[d.id] ? `
-        <div class="cinfographic">
-          <img src="${INFOGRAPHICS[d.id]}" alt="Tactical infographic — ${d.n}"
-               loading="lazy"
-               onerror="this.closest('.cinfographic').style.display='none'">
-          <span class="infog-label">Infographic</span>
-        </div>` : ''}
+      ${carouselHtml}
       <div class="ccomments" data-id="${d.id}">
         <button class="cc-toggle" onclick="toggleComments(this,${d.id})">
           <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
@@ -1109,8 +1240,7 @@ function render(items){
             <button class="cc-submit" onclick="submitComment(${d.id})">Post</button>
           </div>
         </div>
-      </div>
-      ${mediaHtml}`;  /* infographic + comments + media are siblings of card-body for list-view grid placement */
+      </div>`;  /* carousel + comments are siblings of card-body for list-view grid placement */
     g.appendChild(c);
   });
 }
@@ -1184,45 +1314,44 @@ function toggleComments(btn, itemId) {
   if (isOpen) loadComments(itemId);
 }
 
-// ── MEDIA GALLERY CONTROLS ────────────────────────────────────────────────
-function toggleMedia(btn, id) {
-  const body = document.getElementById(`media-body-${id}`);
-  if (!body) return;
-  const isOpen = body.classList.toggle('open');
-  btn.style.color = isOpen ? 'var(--accent2)' : '';
+// ── CAROUSEL CONTROLS ────────────────────────────────────────────────────
+function carMove(btn, dir) {
+  const car = btn.closest('.ccarousel');
+  stopCarVideo(car);
+  const total = +car.dataset.total;
+  const idx = ((+car.dataset.idx || 0) + dir + total) % total;
+  carGoto(car, idx);
 }
 
-function playVideo(item, videoId) {
-  // If already playing this video, collapse it back to thumbnail
-  if (item.classList.contains('playing')) {
-    item.classList.remove('playing');
-    const thumb = item.querySelector('.media-thumb');
-    if (thumb) thumb.style.display = '';
-    const iframe = item.querySelector('iframe');
-    if (iframe) iframe.remove();
+function carGoto(car, idx) {
+  car.dataset.idx = idx;
+  car.querySelector('.carousel-track').style.transform = `translateX(-${idx * 100}%)`;
+  car.querySelectorAll('.car-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+}
+
+function playCarVideo(thumbEl, videoId) {
+  const slide = thumbEl.closest('.carousel-slide');
+  // Toggle: already playing? stop it
+  const existing = slide.querySelector('iframe');
+  if (existing) {
+    existing.remove();
+    thumbEl.style.display = '';
     return;
   }
-  // Collapse any other playing item in the same scroll row
-  const scroll = item.closest('.media-scroll');
-  if (scroll) {
-    scroll.querySelectorAll('.media-item.playing').forEach(p => {
-      p.classList.remove('playing');
-      const t = p.querySelector('.media-thumb');
-      if (t) t.style.display = '';
-      const f = p.querySelector('iframe');
-      if (f) f.remove();
-    });
-  }
-  // Embed YouTube player
-  item.classList.add('playing');
-  const thumb = item.querySelector('.media-thumb');
-  if (thumb) thumb.style.display = 'none';
+  thumbEl.style.display = 'none';
   const iframe = document.createElement('iframe');
   iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
   iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
   iframe.allowFullscreen = true;
-  const cap = item.querySelector('.media-cap');
-  item.insertBefore(iframe, cap);
+  slide.insertBefore(iframe, slide.querySelector('.cs-cap') || null);
+}
+
+function stopCarVideo(car) {
+  car.querySelectorAll('.carousel-slide iframe').forEach(f => {
+    const thumb = f.closest('.carousel-slide').querySelector('.cs-thumb');
+    if (thumb) thumb.style.display = '';
+    f.remove();
+  });
 }
 
 // Allow Ctrl+Enter to submit
@@ -1349,11 +1478,13 @@ function closeLightbox() {
   setTimeout(() => { lbImg.src = ''; }, 200);
 }
 
-// Delegate click on any infographic image
+// Delegate click on carousel infographic slides → open lightbox
+// (also handled via inline onclick; this catches edge cases)
 document.getElementById('grid').addEventListener('click', e => {
-  const img = e.target.closest('.cinfographic img');
-  if (!img) return;
-  openLightbox(img.src, img.closest('.card')?.querySelector('.cname')?.textContent);
+  const slide = e.target.closest('.carousel-slide.cs-infog');
+  if (!slide) return;
+  const img = slide.querySelector('img');
+  if (img) openLightbox(img.src, slide.closest('.card')?.querySelector('.cname')?.textContent);
 });
 
 // Close on backdrop click or close button
