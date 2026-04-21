@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FOG Countermeasures — 55 Innovative Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* High Contrast Light Palette */
+  --bg: #ffffff;
+  --surface: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --border-hi: #cbd5e1;
+  --accent: #0284c7;
+  --accent2: #ea580c;
+  --text: #0f172a;
+  --muted: #64748b;
+  --text-dim: #334155;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;min-height:100vh;overflow-x:hidden;font-size:15px;line-height:1.5;}
+
+/* HEADER */
+header{position:relative;padding:52px 40px 36px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#f1f5f9 0%,var(--bg) 100%);overflow:hidden;}
+header::before{content:'';position:absolute;top:-60px;left:-60px;right:-60px;bottom:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,0,0,.03) 0%,transparent 70%);pointer-events:none;}
+.header-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;}
+.threat-badge{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--accent2);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.threat-badge::before{content:'';display:inline-block;width:7px;height:7px;background:var(--accent2);border-radius:50%;animation:pulse 1.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(1.4);}}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,5.5vw,72px);letter-spacing:2px;line-height:1;color:var(--text);}
+h1 span{color:var(--accent);}
+.subtitle{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);margin-top:10px;letter-spacing:1px;}
+.stats-row{display:flex;gap:24px;align-items:flex-end;}
+.stat{text-align:right;font-family:'IBM Plex Mono',monospace;}
+.stat-num{font-size:34px;font-weight:600;color:var(--accent);line-height:1;}
+.stat-label{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:3px;}
+
+/* FILTER PANEL */
+.filter-panel{max-width:1400px;margin:0 auto;padding:0 40px;}
+.filter-section{padding:16px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.fgl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;width:96px;flex-shrink:0;font-weight:600;}
+.fchips{display:flex;gap:7px;flex-wrap:wrap;flex:1;}
+.chip{padding:6px 14px;border:1px solid var(--border);background:var(--card);color:var(--text-dim);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.5px;cursor:pointer;border-radius:3px;transition:all .15s;text-transform:uppercase;white-space:nowrap;}
+.chip:hover{border-color:var(--cc,var(--accent));color:var(--cc,var(--accent));}
+.chip.active{background:var(--cc,var(--accent));color:#fff;border-color:var(--cc,var(--accent));font-weight:700;}
+.range-wrap{display:flex;align-items:center;gap:16px;flex:1;}
+.range-out{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--accent);min-width:130px;font-weight:600;}
+input[type=range]{flex:1;max-width:300px;-webkit-appearance:none;height:4px;background:var(--border);border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--accent);border:none;}
+.search-wrap{position:relative;margin-left:auto;}
+.search-wrap::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:16px;pointer-events:none;}
+input[type=search]{background:var(--card);border:1px solid var(--border);color:var(--text);padding:7px 14px 7px 32px;font-family:'IBM Plex Mono',monospace;font-size:13px;border-radius:3px;width:220px;outline:none;transition:border-color .15s;}
+input[type=search]:focus{border-color:var(--accent);}
+input[type=search]::placeholder{color:var(--muted);}
+
+/* ACTIVE TAGS */
+.active-bar{max-width:1400px;margin:0 auto;padding:10px 40px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:46px;border-bottom:1px solid var(--border);}
+.atag{display:flex;align-items:center;gap:5px;padding:4px 11px;background:rgba(0,0,0,.03);border:1px solid var(--border);color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;border-radius:3px;text-transform:uppercase;}
+.atag button{background:none;border:none;cursor:pointer;color:var(--accent);font-size:13px;line-height:1;padding:0 0 0 4px;}
+.clear-all-btn{margin-left:auto;padding:4px 12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border-radius:3px;text-transform:uppercase;transition:all .15s;}
+.clear-all-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* SORT BAR */
+.sort-bar{max-width:1400px;margin:0 auto;padding:11px 40px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.sl{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;margin-right:4px;font-weight:600;}
+.sbtn{padding:5px 12px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;cursor:pointer;border-radius:3px;text-transform:uppercase;transition:all .15s;}
+.sbtn:hover,.sbtn.active{border-color:var(--accent);color:var(--accent);background:var(--surface);}
+.rcnt{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);letter-spacing:1px;}
+
+/* GRID */
+.grid{max-width:1400px;margin:0 auto;padding:28px 40px 56px;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:22px;position:relative;transition:all .2s;display:flex;flex-direction:column;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.02);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc,var(--accent));opacity:0;transition:opacity .2s;border-radius:5px 5px 0 0;}
+.card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:10;}
+.card:hover::before{opacity:1;}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.cnum{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted);letter-spacing:1px;flex-shrink:0;}
+.ccat{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;border-radius:3px;white-space:nowrap;}
+.cvote{display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:4px;padding:2px 8px;margin-left:auto;background:var(--surface);}
+.vbtn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:10px;padding:4px;}
+.vbtn:hover{color:var(--accent);}
+.vcnt{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);min-width:20px;text-align:center;}
+.cname{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);line-height:1.15;margin-top:4px;}
+.cdesc{font-size:13.5px;line-height:1.75;color:var(--text-dim);flex:1;}
+
+/* EVIDENCE STYLING */
+.cevid { margin-top: 8px; background: rgba(0,0,0,0.02); border-radius: 6px; padding: 14px; border-left: 3px solid var(--cc, var(--accent)); box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); border-left-width: 3px; }
+.ev-header { font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.ev-header::after { content: ''; flex: 1; height: 1px; background: rgba(0,0,0,0.1); }
+.ev-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.ev-item { display: flex; flex-direction: column; gap: 6px; }
+.ev-link-row { display: flex; align-items: center; gap: 8px; }
+.ev-icon { width: 14px; height: 14px; opacity: 0.8; flex-shrink: 0; color: var(--cc, var(--accent)); }
+.ev-link { color: var(--text); text-decoration: none; font-size: 12.5px; font-weight: 600; font-family: 'IBM Plex Mono', monospace; transition: all 0.15s; }
+.ev-link:hover { color: var(--accent); text-decoration: underline; }
+.ev-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; margin-left: 22px; padding: 8px 12px; background: rgba(0,0,0,0.04); border-radius: 4px; border-left: 2px solid rgba(0,0,0,0.1); position: relative; }
+
+/* INFO TOOLTIP (COST & FEASIBILITY) */
+.info-wrap { position: relative; display: inline-flex; align-items: center; margin-left: 6px; cursor: help; vertical-align: middle; }
+.info-icon { width: 13px; height: 13px; color: var(--muted); transition: color 0.2s; }
+.info-wrap:hover .info-icon { color: var(--accent); }
+.info-tooltip {
+  position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(4px);
+  background: var(--card); border: 1px solid var(--border-hi); border-radius: 4px; padding: 12px;
+  width: max-content; min-width: 180px; opacity: 0; visibility: hidden; transition: all 0.2s ease-in-out;
+  z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.info-wrap:hover .info-tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.info-tooltip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border-width: 5px; border-style: solid; border-color: var(--border-hi) transparent transparent transparent;
+}
+.tooltip-header { font-family:'IBM Plex Mono',monospace; font-size: 9px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+.bd-row { display: flex; justify-content: space-between; font-family:'IBM Plex Mono',monospace; font-size: 10.5px; color: var(--text-dim); margin-bottom: 6px; gap: 20px; }
+.bd-val { color: var(--text); font-weight: 600; text-align: right; }
+.bd-total { display: flex; justify-content: space-between; font-family:'IBM Plex Mono',monospace; font-size: 11px; color: var(--accent); border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 6px; font-weight: 700; }
+
+.cfoot{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:6px;padding-top:14px;border-top:1px solid var(--border);}
+.cm{display:flex;flex-direction:column;gap:4px;position:relative;}
+.mlabel{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.mval{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--text);}
+.cbadge{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 8px;border-radius:3px;font-weight:700;display:inline-block;margin-top:2px;}
+.fbar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:5px;}
+.ffill{height:100%;border-radius:2px;}
+.fval{font-family:'IBM Plex Mono',monospace;font-size:12px;margin-top:3px;font-weight:600;}
+.nores{grid-column:1/-1;text-align:center;padding:80px;font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:14px;}
+
+body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999;}
+
+@media (max-width: 768px) {
+    header { padding: 30px 20px; }
+    .header-inner { grid-template-columns: 1fr; text-align: left; }
+    .stats-row { justify-content: flex-start; margin-top: 20px; }
+    .grid { padding: 20px; grid-template-columns: 1fr; }
+    .filter-panel { padding: 0 20px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="threat-badge">Threat classification: fiber-optic guided — EW-immune — Ukraine active 2025</div>
+      <h1>55 INNOVATIVE<br><span>FOG COUNTERMEASURES</span></h1>
+      <div class="subtitle">// R&amp;D · Military Procurement · Technical Reference · April 2026</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num" id="vis-count">55</div><div class="stat-label">Showing</div></div>
+      <div class="stat"><div class="stat-num">10</div><div class="stat-label">Categories</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="filter-panel">
+  <div class="filter-section">
+    <span class="fgl">Category</span>
+    <div class="fchips" id="cat-chips"></div>
+    <div class="search-wrap"><input type="search" id="search" placeholder="Search components..."></div>
+  </div>
+  <div class="filter-section">
+    <span class="fgl">Feasibility</span>
+    <div class="fchips" id="feas-chips"></div>
+  </div>
+  <div class="filter-section">
+    <span class="fgl">Cost Tier</span>
+    <div class="fchips" id="cost-chips"></div>
+  </div>
+  <div class="filter-section">
+    <span class="fgl">Max Cost</span>
+    <div class="range-wrap">
+      <input type="range" id="cslider" min="0" max="5" step="1" value="5">
+      <span class="range-out" id="slider-lbl">Any cost</span>
+    </div>
+  </div>
+</div>
+
+<div class="active-bar" id="abar"></div>
+
+<div class="sort-bar">
+  <span class="sl">Sort</span>
+  <button class="sbtn active" data-sort="default">Default</button>
+  <button class="sbtn" data-sort="votes-desc">Most Voted</button>
+  <button class="sbtn" data-sort="feas-desc">Feasibility ↓</button>
+  <button class="sbtn" data-sort="feas-asc">Feasibility ↑</button>
+  <button class="sbtn" data-sort="cost-asc">Cost ↑</button>
+  <button class="sbtn" data-sort="cost-desc">Cost ↓</button>
+  <button class="sbtn" data-sort="name">Name A–Z</button>
+  <span class="rcnt" id="rcnt">55 of 55 results</span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const ICONS = {
+  news: `<svg class="ev-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path d="M14 14H7v2h7v-2zm3-4H7v2h10v-2zm0-4H7v2h10V6z"/></svg>`,
+  academic: `<svg class="ev-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>`
+};
+
+const CC={
+  "Physical / Cable":"#0284c7","Optical":"#7c3aed","Kinetic":"#dc2626",
+  "Detection":"#0ea5e9","Directed Energy":"#ea580c","Swarm / AI":"#db2777",
+  "Environmental":"#059669","Deception":"#9333ea","Supply Chain":"#475569","Biological":"#65a30d"
+};
+const FORD=["High","Medium-High","Medium","Low-Medium","Low"];
+const FCOL={"High":"#059669","Medium-High":"#84cc16","Medium":"#eab308","Low-Medium":"#f97316","Low":"#ef4444"};
+const FPCT={"High":85,"Medium-High":70,"Medium":55,"Low-Medium":38,"Low":20};
+const CTIERS=["Free / Classified","< $1K","$1K – $10K","$10K – $100K","$100K – $1M","> $1M"];
+const TCOL={"Free / Classified":"#64748b","< $1K":"#059669","$1K – $10K":"#84cc16","$10K – $100K":"#eab308","$100K – $1M":"#f97316","> $1M":"#ef4444"};
+const SLBL=["Free / Classified","Up to $1K","Up to $10K","Up to $100K","Up to $1M","Any cost"];
+
+const DATA=[
+  {n:"Motorized Razor-Wire Curtain",cat:"Physical / Cable",desc:"Rotating razor-wire panels on stakes, motor-driven at 3 RPM, continuously sweeping low flight corridors. The wire snags the fiber tether and severs it mid-flight, leaving the drone blind.",cost:"$80–$300/section",ct:0,cn:200,feas:"High", bd:[{k:"Drive Motor",v:"45%"},{k:"Razor Wire",v:"35%"},{k:"Mounting",v:"20%"}], fj:[{k:"TRL",v:"9 (Combat)"},{k:"SWaP",v:"Low"},{k:"Limit",v:"Fixed Path"}], ev:[{t:"Tom's Hardware",u:"https://www.tomshardware.com/tech-industry/ukraines-rotating-barbed-wire-drone-barriers-discovered-by-russians-motorized-barriers-tear-and-slice-the-fiber-optic-lines-that-jam-proof-drones-leave-in-their-trail",type:"news",d:"Field footage from Ukraine confirms that 150m rotating barbed-wire barriers, driven by 1-RPM motors, successfully snag and snap jam-proof FOG tethers in combat."},{t:"Unmanned Airspace",u:"https://www.unmannedairspace.info/counter-uas-systems-and-policies/ukraine-deploys-rotating-barbed-wire-fences-to-counter-fibre-optic-drones/",type:"news",d:"Industry analysis validates motorized wire fences as a highly effective, low-cost physical countermeasure specifically targeting the tether vulnerability."},{t:"U.S. Army Official",u:"https://www.army.mil/article/287737/fiber_optic_drones_posing_a_significant_c_uas_challenge",type:"news",d:"U.S. Army doctrine identifies physical tether severing as a critical and highly feasible vulnerability to exploit in FOG defense strategies."}]},
+  {n:"Heated Tungsten Thread Barrier",cat:"Physical / Cable",desc:"Parallel grid of resistively heated tungsten wires (600–700 °C) suspended at 0.5–3 m height. Fiber-optic cable melts on contact in under 50 ms.",cost:"$200–$800/section",ct:0,cn:500,feas:"Medium-High", bd:[{k:"Tungsten Elem.",v:"50%"},{k:"Power Supply",v:"35%"},{k:"Clips/Mounts",v:"15%"}], fj:[{k:"TRL",v:"6 (Proto)"},{k:"Power Need",v:"High"},{k:"Limit",v:"Thermal Sig"}], ev:[{t:"Corning White Paper",u:"https://www.corning.com/microsites/coc/oem/documents/specialty-fiber/WP4250-Thermal-Stability-of-the-CPC-Fiber-Coating-System.pdf",type:"academic",d:"Technical white papers prove that silica fiber polymer coatings critically degrade at 150°C and undergo catastrophic decomposition at 300°C within minutes."},{t:"Stolov et al. (2008)",u:"https://www.researchgate.net/publication/228649202_Thermal_Stability_of_Specialty_Optical_Fibers",type:"academic",d:"Peer-reviewed thermodynamics studies confirm specialty optical fibers lose all structural integrity and signal capacity when exposed to targeted thermal thresholds."}]},
+  {n:"Aerial Fiber-Snare Net Projector",cat:"Physical / Cable",desc:"Shoulder-launched or vehicle-mounted system fires a 15×15 m bolo net to intercept low-altitude drones and their trailing cable.",cost:"$1,500–$4,000/shot",ct:1,cn:2500,feas:"Medium-High", bd:[{k:"Net Cartridge",v:"60%"},{k:"Launcher System",v:"30%"},{k:"Propellant",v:"10%"}], fj:[{k:"TRL",v:"8 (Deployed)"},{k:"Reload",v:"Slow"},{k:"Limit",v:"Close Range"}], ev:[{t:"Breaking Defense",u:"https://breakingdefense.com/2023/10/a-better-c-uas-option-capture-enemy-drones-in-a-net/",type:"news",d:"Fortem's DroneHunter autonomous net-capture systems are combat-proven with over 4,500 successful kinetic captures in active conflict zones."},{t:"OpenWorks SkyWall",u:"https://openworksengineering.com/skywall-patrol/",type:"news",d:"Handheld pneumatic net projectors successfully entangle low-altitude drone rotors and completely disable trailing payloads and tethers."}]},
+  {n:"Drone-Mounted Cable Cutter",cat:"Physical / Cable",desc:"Small interceptor drone equipped with counter-rotating serrated blades designed to sever the trailing fiber cable mid-air.",cost:"$800–$2,500/unit",ct:1,cn:1500,feas:"High", bd:[{t:"Drone Platform",v:"50%"},{k:"Cutting Mech.",v:"30%"},{k:"Targeting AI",v:"20%"}], fj:[{k:"TRL",v:"7 (Testing)"},{k:"Precision",v:"High"},{k:"Limit",v:"Needs Cueing"}], ev:[{t:"U.S. Army C-UAS",u:"https://www.army.mil/article/287737/fiber_optic_drones_posing_a_significant_c_uas_challenge",type:"news",d:"U.S. Army C-UAS reports explicitly discuss drone-on-drone kinetic interception as a primary method to physically sever guidance tethers mid-air."},{t:"Bulgarian Military",u:"https://bulgarianmilitary.com/2024/12/05/russia-explores-countermeasures-for-fiber-optic-fpv-drones/",type:"news",d:"Adversary RFI documents reveal active development of FPV-mounted serrated cable cutters to neutralize FOG systems without full drone destruction."}]},
+  {n:"Underwater Fiber-Snare Boom",cat:"Physical / Cable",desc:"A submerged boom of vertical monofilament lines spanning waterways that FOG drones must cross at low altitude.",cost:"$500–$2,000/deployment",ct:1,cn:1000,feas:"High", bd:[{k:"Sensing Pods",v:"60%"},{k:"Monofilament",v:"20%"},{k:"Anchors",v:"20%"}], fj:[{k:"TRL",v:"9 (COTS)"},{k:"Power Need",v:"Zero"},{k:"Limit",v:"Waterways"}], ev:[{t:"Optics11 Security",u:"https://optics11.com/underwater-security/the-unseen-drone-wall-why-europe-needs-an-underwater-layer-and-how-optibarrier-delivers-it/",type:"news",d:"Submerged monofilament and fiber-optic sensor barriers are successfully deployed to secure waterways against low-altitude and underwater infiltration."},{t:"Sensors (2022) Survey",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC9143730/",type:"academic",d:"Academic threat surveys validate underwater physical snare networks as highly effective, zero-power passive defenses against UUV and low-flying UAV threats."}]},
+  {n:"Electrified Perimeter Grid",cat:"Physical / Cable",desc:"Tensioned stainless-steel grid carrying high-voltage pulses. Fiber contact triggers arc-fusion and severs the core.",cost:"$2,000–$8,000/100 m",ct:1,cn:5000,feas:"Medium-High", bd:[{k:"HV Generator",v:"55%"},{k:"Steel Grid",v:"30%"},{k:"Alarm System",v:"15%"}], fj:[{k:"TRL",v:"8 (Deployed)"},{k:"Deterrence",v:"High"},{k:"Limit",v:"Fratricide Risk"}], ev:[{t:"Drone Defence SkyFence",u:"https://www.dronedefence.co.uk/skyfence/",type:"news",d:"Commercial electrified perimeter meshes successfully disrupt control signals and physically destroy drone electronics via arc-fusion on contact."},{t:"Pentagon JIATF-401",u:"https://media.defense.gov/2026/Jan/30/2003868750/-1/-1/0/JIATF-401-GUIDE-FOR-PHYSICAL-PROTECTION-OF-CRITICAL-INFRASTRUCTURE.PDF",type:"news",d:"Department of Defense guidelines mandate layered physical security perimeters with integrated sensors to protect critical infrastructure from UAS."}]},
+  {n:"Mylar Balloon Wall",cat:"Physical / Cable",desc:"Grid of metallized Mylar balloons tethered at 5–50 m altitude, connected by monofilament cross-lines.",cost:"$50–$150/balloon",ct:0,cn:100,feas:"High", bd:[{k:"Balloons/Gas",v:"60%"},{k:"Tethers",v:"20%"},{k:"Reflectors",v:"20%"}], fj:[{k:"TRL",v:"9 (Combat)"},{k:"Deploy Time",v:"Rapid"},{k:"Limit",v:"Wind Sens."}], ev:[{t:"The War Zone - Balloons",u:"https://www.twz.com/china-seen-using-radar-reflector-balloons-to-defend-key-targets",type:"news",d:"The PLA actively utilizes tethered metallized balloons to create dense, low-cost physical entanglement meshes while simultaneously boosting radar detection."}]},
+  {n:"Fiber-Dissolving Chemical Spray",cat:"Physical / Cable",desc:"A mist of sodium hydroxide aerosol (pH 14+) along approach corridors that fractures silica fibers within seconds.",cost:"$200–$600/deployment",ct:0,cn:400,feas:"Medium", bd:[{k:"Chemical Agent",v:"50%"},{k:"Sprayer/Pad",v:"35%"},{k:"Logistics",v:"15%"}], fj:[{k:"TRL",v:"5 (Lab)"},{k:"Toxicity",v:"High"},{k:"Limit",v:"Contamination"}], ev:[{t:"arXiv - Fiber Stripping",u:"https://arxiv.org/html/2510.00335v1",type:"academic",d:"Laboratory testing proves that methanol and acetone solutions rapidly dissolve the adhesive polyimide coatings protecting optical glass fibers."},{t:"Chemical Damage Paper",u:"https://www.researchgate.net/publication/229013349_Mechanical_and_chemical_damage_of_optical_fiber_polymer_coating",type:"academic",d:"Chemical solvents like methylene chloride aggressively degrade and remove optical fiber polymer coatings in under 60 seconds, causing structural failure."}]},
+  {n:"Laser Dazzler Array",cat:"Optical",desc:"Low-power green/red lasers slaved to AI tracker to saturate CMOS sensors, blinding operator video feed.",cost:"$3,000–$12,000/system",ct:1,cn:7000,feas:"High", bd:[{k:"Laser Emitter",v:"50%"},{k:"AI Tracker",v:"35%"},{k:"Camera/Optics",v:"15%"}], fj:[{k:"TRL",v:"8 (Deployed)"},{k:"Collateral",v:"Low"},{k:"Limit",v:"LoS Required"}], ev:[{t:"The War Zone - Dazzlers",u:"https://www.twz.com/land/laser-dazzlers-for-defending-tanks-against-marauding-drones-are-an-untapped-countermeasure",type:"news",d:"In-depth military analysis confirms laser dazzlers effectively blind optical sensors on marauding drones, providing a non-kinetic defense for armored vehicles."},{t:"EOS Laser Demonstration",u:"https://www.defenseadvancement.com/news/laser-powered-counter-drone-solution-successfully-demonstrated/",type:"news",d:"Live-fire demonstrations successfully proved integrated laser dazzler systems can permanently saturate and disable drone CMOS cameras at tactical ranges."}]},
+  {n:"Pulsed Strobe Saturator",cat:"Optical",desc:"High-intensity xenon strobes pulsing at 30 Hz to saturate drone cameras with rolling shutter artifacts.",cost:"$500–$2,500/unit",ct:1,cn:1500,feas:"High", bd:[{k:"Xenon Tubes",v:"45%"},{k:"Capacitors",v:"40%"},{k:"Housing",v:"15%"}], fj:[{k:"TRL",v:"8 (COTS Base)"},{k:"Coverage",v:"Wide"},{k:"Limit",v:"Reveals Pos."}], ev:[{t:"PMC Sensor Damage",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC9002732/",type:"academic",d:"Peer-reviewed optical research confirms that intense pulsed laser/strobe light causes irreversible damage to CCD and CMOS sensors at ranges exceeding 500m."},{t:"Saturation Thresholds",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC3545610/",type:"academic",d:"Calculated saturation irradiance thresholds prove that intense point light sources induce severe rolling shutter artifacts, completely blinding video feeds."}]},
+  {n:"IR Laser Spoofing Grid",cat:"Optical",desc:"IR lasers (850 nm) create a false thermal/optical horizon to confuse AI auto-tracking systems.",cost:"$5,000–$20,000/system",ct:2,cn:12000,feas:"Medium-High", bd:[{k:"IR Emitters",v:"60%"},{k:"Control Unit",v:"25%"},{k:"Power Dist.",v:"15%"}], fj:[{k:"TRL",v:"6 (Proto)"},{k:"Efficacy",v:"Medium"},{k:"Limit",v:"Target Dep."}], ev:[{t:"EMSOPEDIA - DIRCM",u:"https://www.emsopedia.org/entries/directed-infrared-countermeasure-dircm/",type:"news",d:"DIRCM systems successfully utilize modulated IR laser beams to inject false signals into infrared seekers, causing catastrophic tracking loop failures."},{t:"DSIAC - IRCM Inquiry",u:"https://dsiac.dtic.mil/technical-inquiries/notable/infrared-countermeasure-ircm-technology-for-rotorcrafts-and-unmanned-aerial-vehicles-uavs/",type:"news",d:"Official technical inquiries validate the use of miniaturized IRCM technologies to defend unmanned systems and rotorcraft against EO/IR guided threats."}]},
+  {n:"Retroreflective Camouflage Net",cat:"Optical",desc:"Netting coated with corner-cube retroreflectors returns camera light directly to source, creating glare-based invisibility.",cost:"$200–$800/panel",ct:0,cn:500,feas:"High", bd:[{k:"Retroreflectors",v:"55%"},{k:"Netting Base",v:"35%"},{k:"Hardware",v:"10%"}], fj:[{k:"TRL",v:"9 (Combat)"},{k:"Power Need",v:"Zero"},{k:"Limit",v:"Angle Dep."}], ev:[{t:"Retro-Reflective Study",u:"https://www.researchgate.net/publication/4040651_Optical_camouflage_using_retro-reflective_projection_technology",type:"academic",d:"Academic research on optical camouflage proves that corner-cube retroreflectors return incident light directly to the source, rendering targets invisible to cameras."},{t:"Army ULCANS Netting",u:"https://www.army.mil/article/206368/army_netting_modernized_camo",type:"news",d:"Next-generation U.S. Army camouflage netting successfully integrates multispectral defeat capabilities, completely masking assets from visual, NIR, and thermal sensors."}]},
+  {n:"Adaptive Photochromic Spray",cat:"Optical",desc:"Spray-applied photochromic coating transitions to near-IR absorbing state when illuminated, masking vehicle shape.",cost:"$40–$120/m²",ct:0,cn:80,feas:"Medium", bd:[{k:"Smart Pigment",v:"75%"},{k:"Solvents",v:"15%"},{k:"Application",v:"10%"}], fj:[{k:"TRL",v:"5 (Field Test)"},{k:"Coverage",v:"Total"},{k:"Limit",v:"Reapplication"}], ev:[{t:"Science Advances (2024)",u:"https://www.science.org/doi/10.1126/sciadv.ads2217",type:"academic",d:"Self-adaptive photochromic materials autonomously transition color states in under 0.5 seconds, dynamically matching backgrounds to eliminate visual contrast."},{t:"Bionic Camouflage",u:"https://www.frontiersin.org/journals/materials/articles/10.3389/fmats.2021.637664/full",type:"academic",d:"Extensive reviews of bionic adaptive coatings validate their military application for rapidly masking vehicle shapes from electro-optical drone surveillance."}]},
+  {n:"Liquid Crystal IR Shutter",cat:"Optical",desc:"Switchable liquid crystal glass cycles between opaque and transparent to disrupt video aiming via flicker.",cost:"$8,000–$30,000/vehicle",ct:2,cn:19000,feas:"Medium-High", bd:[{k:"LC Glass Panels",v:"65%"},{k:"Sync Controller",v:"25%"},{k:"Power System",v:"10%"}], fj:[{k:"TRL",v:"6 (Proto)"},{k:"Integration",v:"Complex"},{k:"Limit",v:"Vehicle Mod"}], ev:[{t:"Applied Optics Shutter",u:"https://opg.optica.org/ao/abstract.cfm?URI=ao-55-16-4436",type:"academic",d:"Electrically controlled cholesteric liquid crystal glass successfully cycles between opaque and transparent states to block infrared transmission."},{t:"DARPA ATOM",u:"https://www.darpa.mil/news/2023/tunable-optical-materials",type:"news",d:"The ATOM program successfully develops tunable optical materials that rapidly modulate light transmission to disrupt adversary targeting optics."}]},
+  {n:"Smoke-Generating Ground UGV",cat:"Optical",desc:"Autonomous UGV that deploys aerosol smoke in programmatic patterns around defended assets.",cost:"$20,000–$60,000/UGV",ct:2,cn:40000,feas:"High", bd:[{k:"UGV Chassis",v:"50%"},{k:"Smoke Launcher",v:"35%"},{k:"Ammunition",v:"15%"}], fj:[{k:"TRL",v:"8 (Deployed)"},{k:"Mobility",v:"High"},{k:"Limit",v:"Logistics"}], ev:[{t:"Rheinmetall ROSY UGV",u:"https://www.armyrecognition.com/focus-analysis-conflicts/army/defence-security-industry-technology/rheinmetall-smoke-screen-launcher-rosy-deployed-for-the-first-time-on-milrem-themis-ugv",type:"news",d:"Integration of the ROSY smoke launcher on the THeMIS UGV provides highly mobile, autonomous multispectral obscuration against drone targeting."},{t:"Russian Smoke UGV",u:"https://bulgarianmilitary.com/2024/06/25/russian-forces-are-using-ugv-in-ukraine-to-disperse-smoke-screens/",type:"news",d:"Combat reports from Ukraine confirm active deployment of specialized UGVs to rapidly disperse dense tactical smoke screens over contested areas."}]},
+  {n:"Compressed-Air Flechette Launcher",cat:"Kinetic",desc:"12-bore launchers with tungsten flechette rounds, AI-slaved to micro-radar. Favorable cost-exchange ratio.",cost:"$2,000–$8,000/station",ct:1,cn:5000,feas:"High", bd:[{k:"Radar/AI",v:"50%"},{k:"Launcher",v:"30%"},{k:"Ammunition",v:"20%"}], fj:[{k:"TRL",v:"8 (COTS)"},{k:"Cost Ratio",v:"High"},{k:"Limit",v:"Collateral"}], ev:[{t:"The War Zone - Ammo",u:"https://www.twz.com/news-features/shotgun-pellet-like-rifle-ammo-gun-mounted-jammers-on-marine-anti-drone-wishlist",type:"news",d:"The USMC actively procures 12-bore and 40mm flechette/canister rounds for close-range drone defeat due to their highly favorable cost-exchange ratio."},{t:"Eclipse Air Launchers",u:"https://eclipsedefense.com/products/",type:"news",d:"Commercial air-powered launchers successfully deploy anti-drone net and flechette projectiles with minimal sound and thermal signatures."}]},
+  {n:"Spinning Cable Interceptor Drone",cat:"Kinetic",desc:"Interceptor quadcopter trailing a 5 m weighted cable that rotates to wrap and sever the FOG tether.",cost:"$300–$800/unit",ct:0,cn:550,feas:"Medium-High", bd:[{k:"Drone Base",v:"60%"},{k:"Rotary Motor",v:"25%"},{k:"Weighted Cable",v:"15%"}], fj:[{k:"TRL",v:"6 (Proto)"},{k:"Cost-Exchg",v:"High"},{k:"Limit",v:"Battery Life"}], ev:[{t:"Wiki - Interceptor Methods",u:"https://en.wikipedia.org/wiki/Interceptor_drone",type:"news",d:"Extensive catalogs of kinetic drone-on-drone intercept methods highlight physical entanglement as highly effective against tethered or slow-moving targets."},{t:"Anduril Anvil",u:"https://www.anduril.com/anvil",type:"news",d:"The autonomous Anvil interceptor proves the viability of using rapid kinetic collision to neutralize Group 1-2 UAS threats with low collateral damage."}]},
+  {n:"Miniature CIWS Autocannon",cat:"Kinetic",desc:"30-round 20 mm autocannon on stabilized mount with AI gun-director, optimized for slow FPV targets.",cost:"$250,000–$600,000/mount",ct:3,cn:425000,feas:"Medium-High", bd:[{k:"Autocannon",v:"40%"},{k:"Radar/Tracking",v:"40%"},{k:"Mount/Stab.",v:"20%"}], fj:[{k:"TRL",v:"9 (Combat)"},{k:"Lethality",v:"Extreme"},{k:"Limit",v:"High Cost"}], ev:[{t:"Rheinmetall Skyranger",u:"https://www.rheinmetall.com/en/products/air-defence-systems/mobile-air-defence-skyranger",type:"news",d:"Rheinmetall's 30mm mobile air defense system utilizes programmable AHEAD airburst ammunition to blanket small FPV targets with tungsten shrapnel."},{t:"Centurion C-RAM",u:"https://en.wikipedia.org/wiki/Centurion_C-RAM",type:"news",d:"The land-based Centurion C-RAM system reliably utilizes radar-guided autocannons to destroy incoming aerial threats through dense point-defense fire."}]},
+  {n:"Net-Carrying Quadcopter Swarm",cat:"Kinetic",desc:"Cooperative swarm flying a 6×6 m net to capture FOG drones mid-flight.",cost:"$2,000–$5,000/swarm kit",ct:1,cn:3500,feas:"Medium", bd:[{k:"4x Drones",v:"60%"},{k:"Swarm AI",v:"30%"},{k:"Capture Net",v:"10%"}], fj:[{k:"TRL",v:"6 (Testing)"},{k:"Capture",v:"Non-Lethal"},{k:"Limit",v:"Coordination"}], ev:[{t:"Fortem DroneHunter",u:"https://fortemtech.com/products/dronehunter-f700/",type:"news",d:"The DroneHunter F700 autonomous net-carrying interceptor secured an $18M U.S. Army contract based on its high success rate against evasive drones."},{t:"Interesting Engineering",u:"https://interestingengineering.com/innovation/dronehunter5-interceptor-with-net-gun",type:"news",d:"Innovations in drone-mounted net guns allow cooperative swarms to physically capture non-RF threats mid-flight without relying on electronic warfare."}]},
+  {n:"Reactive Armor Spall Projector",cat:"Kinetic",desc:"Armor tile that fires 500 tungsten balls on detecting acoustic/seismic drone signatures.",cost:"$800–$2,500/tile",ct:1,cn:1600,feas:"Medium", bd:[{k:"Tungsten Spall",v:"45%"},{k:"Explosive Chg",v:"35%"},{k:"Acoustic Sensor",v:"20%"}], fj:[{k:"TRL",v:"7 (Fielded)"},{k:"Response",v:"Instant"},{k:"Limit",v:"One-Time Use"}], ev:[{t:"T-90M ERA Protection",u:"https://www.armyrecognition.com/focus-analysis-conflicts/army/conflicts-in-the-world/russia-ukraine-war-2022/russian-t-90m-tanks-in-ukraine-receive-era-advanced-armor-to-counter-drone-threats",type:"news",d:"Russian armored units actively mount advanced ERA to project explosive spall upwards, explicitly countering top-attack micro-drones in Ukraine."},{t:"Plasan TAPS",u:"https://plasan.com/drone-threats-and-top-attack-protection-does-modern-armor-defeats-fpv-and-loitering-munitions/",type:"news",d:"Modern Top Attack Protection Systems (TAPS) utilize directional fragmentation and reactive armor to reliably defeat close-proximity loitering munitions."}]},
+  {n:"Bolo Wire Projector",cat:"Kinetic",desc:"Pneumatic projector launches bolo wire to entangle rotors and sever fiber simultaneously.",cost:"$500–$1,500/launcher",ct:0,cn:1000,feas:"Medium-High", bd:[{k:"Pneumatic Sys",v:"55%"},{k:"Bolo Projectiles",v:"30%"},{k:"Targeting",v:"15%"}], fj:[{k:"TRL",v:"8 (COTS)"},{k:"Maint.",v:"Low"},{k:"Limit",v:"Short Range"}], ev:[{t:"WRAP Merlin-1",u:"https://www.wrap.com/products/cuas",type:"news",d:"The BolaWrap Kevlar tether system has been successfully adapted for counter-UAS roles, instantly entangling drone rotors upon deployment."},{t:"BolaWrap Airborne",u:"https://www.police1.com/drones/bolawrap-goes-airborne-new-drone-system-aims-to-snare-rogue-uavs",type:"news",d:"Law enforcement and military units are adapting pneumatic bola cartridges onto interceptor drones for rapid mid-air entanglement."}]},
+  {n:"Laser-Guided Flechette Shell",cat:"Kinetic",desc:"Precision 40 mm grenade dispersing 200 flechettes via AI-triggered burst point.",cost:"$15,000–$40,000/launcher",ct:2,cn:27000,feas:"Medium-High", bd:[{k:"Guidance Kit",v:"60%"},{k:"Flechette Warhead",v:"30%"},{k:"Rocket Motor",v:"10%"}], fj:[{k:"TRL",v:"8 (Combat)"},{k:"Lethality",v:"High"},{k:"Limit",v:"Laser Seek Req."}], ev:[{t:"Thales Guided Rockets",u:"https://www.twz.com/air/thales-anti-drone-rockets-now-being-used-in-ukraine",type:"news",d:"70mm laser-guided rockets armed with airburst warheads disperse thousands of steel sub-projectiles, proving highly effective against drones in Ukraine."},{t:"AHEAD Ammunition",u:"https://en.wikipedia.org/wiki/AHEAD_ammunition",type:"news",d:"Programmable tungsten airburst sub-projectile ammunition provides a massive 60:1 cost-exchange advantage against $1,500 FPV threats."}]},
+  {n:"Dense Acoustic Sensor Network",cat:"Detection",desc:"Networked MEMS microphones with edge-AI trained on motor spool harmonics.",cost:"$45–$150/node",ct:0,cn:100,feas:"High", bd:[{k:"MEMS Mics",v:"40%"},{k:"Edge AI Compute",v:"40%"},{k:"Mesh Radio",v:"20%"}], fj:[{k:"TRL",v:"9 (Combat)"},{k:"SWaP",v:"Low"},{k:"Limit",v:"Ambient Noise"}], ev:[{t:"Ukraine Acoustic Net",u:"https://drone-warfare.com/counter-uas/acoustic-detection/",type:"news",d:"Ukraine's 14,000-node acoustic network achieves a 95% interception rate at under $500 per unit by isolating specific drone motor harmonics."},{t:"Squarehead Discovair",u:"https://www.sqhead.com/drone-detection",type:"news",d:"Commercial acoustic arrays utilize machine learning and edge compute to accurately classify and track drone signatures in dense conflict zones."}]},
+  {n:"Buried Seismic Line Sensor",cat:"Detection",desc:"Underground fiber sensing cable detecting micro-vibrations of drone wash wash.",cost:"$2–$8/linear meter",ct:0,cn:500,feas:"Medium-High", bd:[{k:"DAS Interrogator",v:"70%"},{k:"Fiber Cable",v:"20%"},{k:"Trenching",v:"10%"}], fj:[{k:"TRL",v:"7 (Deployed)"},{k:"Concealment",v:"Total"},{k:"Limit",v:"Ground Prep"}], ev:[{t:"IEEE DAS Sensor",u:"https://opg.optica.org/jlt/abstract.cfm?uri=jlt-41-3-822",type:"academic",d:"Distributed Acoustic Sensing (DAS) over fiber-optic cables detects and localizes drone rotor micro-vibrations with zero electromagnetic signature."},{t:"RBTec Seismo",u:"https://www.rbtec.com/perimeter-sensors-and-underground-protection/buried-sensors/unattended-ground-sensor-security-system-ugs/",type:"news",d:"Buried seismic geophone networks provide highly reliable, completely passive perimeter intrusion detection against low-altitude threats."}]},
+  {n:"Passive Radar via 5G Signals",cat:"Detection",desc:"Bistatic radar exploiting 5G mmWave signals to detect rotor micro-Doppler without emissions.",cost:"$15,000–$50,000/node",ct:2,cn:32000,feas:"Medium-High", bd:[{k:"Signal Processors",v:"60%"},{k:"Antenna Array",v:"30%"},{k:"Software/AI",v:"10%"}], fj:[{k:"TRL",v:"6 (Testing)"},{k:"Emissions",v:"Zero"},{k:"Limit",v:"Needs 5G Net"}], ev:[{t:"MDPI Passive 5G",u:"https://www.mdpi.com/2072-4292/14/23/6146",type:"academic",d:"Bistatic passive radar algorithms successfully exploit ambient 5G mmWave signals to detect drone rotor micro-Doppler without emitting any RF."},{t:"Tiami PolyEdge",u:"https://tiaminetworks.com/enhancing-drone-detection-with-tiami-networks-polyedge-multifunction-sensor/",type:"news",d:"Commercial passive 5G radar systems are actively deployed by Thales and DHS to covertly detect zero-emission drones in urban environments."}]},
+  {n:"Retro-Reflection Flash Detector",cat:"Detection",desc:"Pulsed LED flash array measuring cat's eye retro-reflection from drone lenses.",cost:"$2,000–$8,000/unit",ct:1,cn:5000,feas:"Medium-High", bd:[{k:"LED Emitter",v:"45%"},{k:"Photodetector",v:"40%"},{k:"Optics",v:"15%"}], fj:[{k:"TRL",v:"7 (Deployed)"},{k:"Portability",v:"High"},{k:"Limit",v:"Lens Angle Dep."}], ev:[{t:"Springer Cat's Eye",u:"https://link.springer.com/article/10.1631/FITEE.2500522",type:"academic",d:"Deep learning models integrated with active laser detection successfully identify the unique 'cat's eye' retro-reflection of drone camera lenses."},{t:"Active Detection Paper",u:"https://www.sciencedirect.com/science/article/pii/S2211379724007150",type:"academic",d:"Theoretical and field testing proves pulsed LED flash arrays can reliably pinpoint drone optical payloads at ranges between 200m and 800m."}]},
+  {n:"Magnetic Anomaly Detector Grid",cat:"Detection",desc:"High-sensitivity fluxgate magnetometers detecting permanent magnets in brushless motors.",cost:"$300–$900/sensor",ct:0,cn:600,feas:"Medium", bd:[{k:"Fluxgate Sensors",v:"55%"},{k:"Telemetry",v:"30%"},{k:"Power",v:"15%"}], fj:[{k:"TRL",v:"6 (Proto)"},{k:"Weather",v:"Immune"},{k:"Limit",v:"Short Range"}], ev:[{t:"PNI Low-SWaP",u:"https://www.pnisensor.com/low-swap-magnetometer-drone-swarms/",type:"news",d:"Networks of low-SWaP fluxgate magnetometers successfully monitor magnetic anomalies to detect the permanent magnets in drone brushless motors."},{t:"Defense Advancement",u:"https://www.defenseadvancement.com/suppliers/drone-magnetometers/",type:"news",d:"Magnetic Anomaly Detectors (MAD) offer completely passive, all-weather detection of heavy-spooled FOG drones with zero EM emissions."}]},
+  {n:"AI Vapor Trail Tracker",cat:"Detection",desc:"Neural net trained on optical glint of fiber cable to track trajectory back to operator.",cost:"$5,000–$20,000/system",ct:2,cn:12000,feas:"Medium", bd:[{k:"Optics/Camera",v:"45%"},{k:"AI Compute Unit",v:"45%"},{k:"Mounting",v:"10%"}], fj:[{k:"TRL",v:"4 (Concept)"},{k:"SWaP",v:"Med"},{k:"Limit",v:"Lighting Dep."}], ev:[{t:"MIT Contrail Detection",u:"https://dspace.mit.edu/handle/1721.1/124179",type:"academic",d:"Convolutional Neural Networks (CNNs) accurately detect and trace condensation trails and fiber glint in satellite and long-exposure imagery."},{t:"MDPI Aerospace Study",u:"https://www.mdpi.com/2226-4310/10/7/578",type:"academic",d:"Advanced AI tracking algorithms successfully utilize geostationary IR imagery to trace aerial trajectories back to their exact launch locations."}]},
+  {n:"Infrasound Detection Array",cat:"Detection",desc:"Low-frequency microphones (1–20 Hz) detecting infrasound from large rotor blades.",cost:"$800–$2,500/sensor",ct:0,cn:1600,feas:"Medium", bd:[{k:"LF Microphones",v:"50%"},{k:"DSP Unit",v:"35%"},{k:"Telemetry",v:"15%"}], fj:[{k:"TRL",v:"6 (Fielded)"},{k:"Range",v:"High"},{k:"Limit",v:"Heavy Drones"}], ev:[{t:"QuakeLogic SIS-1",u:"https://blog.quakelogic.net/uav-detection-using-infrasound-the-power-of-sis-1-infrasound-sensors/",type:"news",d:"Low-frequency (1-20 Hz) infrasound sensors reliably detect heavy-rotor drones at ranges of 1-3km, remaining completely unaffected by wind noise."},{t:"NASA Infrasound Tech",u:"https://technology.nasa.gov/patent/LAR-TOPS-281",type:"academic",d:"NASA-patented infrasound technologies successfully track low-altitude UAS in dense urban areas by isolating their unique low-frequency acoustic signatures."}]},
+  {n:"Networked Bird-Strike Radar",cat:"Detection",desc:"Adapts commercial bird radar for slow-moving, low-RCS drone targets.",cost:"$40,000–$120,000/unit",ct:2,cn:80000,feas:"High", bd:[{k:"Radar Array",v:"55%"},{k:"Signal Processing",v:"35%"},{k:"Interface",v:"10%"}], fj:[{k:"TRL",v:"9 (COTS)"},{k:"Maturity",v:"High"},{k:"Limit",v:"Costly"}], ev:[{t:"DeTect MERLIN Radar",u:"https://detect-inc.com/aircraft-birdstrike-avoidance-radar/",type:"news",d:"Dual-function commercial bird-strike radars are successfully deployed at USAF bases to track extremely low RCS, slow-moving drone targets."},{t:"Robin Radar IRIS",u:"https://www.robinradar.com/",type:"news",d:"The IRIS 3D radar utilizes micro-Doppler and deep neural networks to accurately classify drones, securing large contracts with the Dutch MoD."}]},
+  {n:"Vehicle-Mounted Microwave Emitter",cat:"Directed Energy",desc:"Directional HPM transmitter (50–100 kW) to fry drone ESCs through gaps in housing.",cost:"$300,000–$800,000/system",ct:3,cn:550000,feas:"Medium-High", bd:[{k:"Microwave Src",v:"60%"},{k:"Cooling System",v:"20%"},{k:"Power Gen",v:"20%"}], fj:[{k:"TRL",v:"8 (Deployed)"},{k:"Effect",v:"Area"},{k:"Limit",v:"Power Gen."}], ev:[{t:"Epirus Leonidas HPM",u:"https://breakingdefense.com/2025/02/high-power-microwave-force-field-knocks-drone-swarms-from-sky/",type:"news",d:"The Leonidas vehicle-mounted HPM system demonstrated a 100% success rate, instantly frying drone ESCs and neutralizing full swarms."},{t:"USMC ExDECS",u:"https://www.twz.com/land/marines-get-their-first-high-power-microwave-weapon-for-taking-on-drone-swarms",type:"news",d:"The U.S. Marine Corps actively deploys the ExDECS High-Power Microwave weapon specifically to defeat FOG drones by destroying onboard electronics."}]},
+  {n:"UV-C Fiber Degradation Laser",cat:"Directed Energy",desc:"UV laser (254 nm) that induces photo-darkening and high attenuation in the fiber cable.",cost:"$80,000–$250,000/system",ct:2,cn:165000,feas:"Medium", bd:[{k:"UV Laser Src",v:"55%"},{k:"Tracking System",v:"30%"},{k:"Cooling",v:"15%"}], fj:[{k:"TRL",v:"5 (Lab)"},{k:"Precision",v:"High"},{k:"Limit",v:"Eye Safety"}], ev:[{t:"PMC UV Degradation",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC9656304/",type:"academic",d:"Studies confirm that 254nm UV-C exposure induces rapid photo-darkening and structural degradation in polymer-coated optical fibers."},{t:"POF Reversible Losses",u:"https://www.sciencedirect.com/science/article/abs/pii/S0030401807013521",type:"academic",d:"U.S. Army-supported research proves targeted UV radiation causes massive wavelength-dependent optical losses, blinding fiber video feeds in seconds."}]},
+  {n:"Millimeter-Wave Heating Beam",cat:"Directed Energy",desc:"95 GHz active denial beam that heats electronics to failure temperature at range.",cost:"$150,000–$500,000/system",ct:3,cn:325000,feas:"Medium", bd:[{k:"Gyrotron/Src",v:"65%"},{k:"Beam Director",v:"20%"},{k:"Power Gen",v:"15%"}], fj:[{k:"TRL",v:"7 (Proto)"},{k:"Collateral",v:"Low"},{k:"Limit",v:"Atmos. Atten."}], ev:[{t:"Wiki - Active Denial",u:"https://en.wikipedia.org/wiki/Active_Denial_System",type:"news",d:"The 95 GHz Active Denial System utilizes millimeter-wave directed energy to rapidly heat target electronics and materials to failure temperatures."},{t:"DoD Prototype Demo",u:"https://www.dvidshub.net/news/511253/dod-demonstrates-nonlethal-directed-energy-prototypes",type:"news",d:"Official DoD demonstrations validate gyrotron-based millimeter-wave beams for close-range, collateral-safe disruption of drone hardware."}]},
+  {n:"Photonic Crystal Disruption Laser",cat:"Directed Energy",desc:"Tunable laser matched to fiber window to inject high-power backscatter into the GCS.",cost:"$500K–$2M (R&D stage)",ct:4,cn:1250000,feas:"Low-Medium", bd:[{k:"Fiber Laser",v:"60%"},{k:"Optics/Relay",v:"25%"},{k:"Cooling",v:"15%"}], fj:[{k:"TRL",v:"3 (R&D)"},{k:"Defeat",v:"Total"},{k:"Limit",v:"Beam Align."}], ev:[{t:"DTIC Fiber Lasers",u:"https://dsiac.dtic.mil/technical-inquiries/notable/state-of-art-fiber-lasers-to-support-ongoing-directed-energy-de-efforts/",type:"news",d:"State-of-the-art photonic crystal fiber lasers deliver extreme high-power beams optimized for directed energy counter-UAS applications."},{t:"IEEE Spectrum DEW",u:"https://spectrum.ieee.org/fiber-lasers-mean-ray-guns-are-coming",type:"news",d:"Tunable hollow-core fiber lasers match 1310/1550nm transmission windows to inject massive backscatter, permanently destroying the GCS display."}]},
+  {n:"Gyrotron Anti-Drone Beam",cat:"Directed Energy",desc:"High peak power pulses targeting carbon-fiber frames and batteries causing ignition.",cost:"$200,000–$700,000/system",ct:3,cn:450000,feas:"Medium", bd:[{k:"Gyrotron Tube",v:"55%"},{k:"Supercond. Mag",v:"25%"},{k:"Beam Controls",v:"20%"}], fj:[{k:"TRL",v:"6 (Proto)"},{k:"Efficiency",v:"High"},{k:"Limit",v:"Cooling Needs"}], ev:[{t:"Wiki - Gyrotron",u:"https://en.wikipedia.org/wiki/Gyrotron",type:"news",d:"Compact 28-35 GHz gyrotron tubes deliver megawatt-class peak power pulses in narrow beams, highly efficient for directed energy applications."},{t:"NDU Defense Tech",u:"https://digitalcommons.ndu.edu/cgi/viewcontent.cgi?article=1043&context=defense-tech-papers",type:"news",d:"Tactical gyrotron beams rapidly induce structural heating and ignite Li-Po batteries in carbon-fiber drone frames at tactical ranges."}]},
+  {n:"Cooperative Interceptor Swarm",cat:"Swarm / AI",desc:"Net-worked micro-drones using pursuit algorithms to intercept targets even under attrition.",cost:"$100–$300/unit",ct:1,cn:2000,feas:"Medium-High", bd:[{k:"Micro-drones",v:"50%"},{k:"Swarm AI/Radio",v:"40%"},{k:"GCS",v:"10%"}], fj:[{k:"TRL",v:"7 (Tested)"},{k:"Resilience",v:"High"},{k:"Limit",v:"Software QA"}], ev:[{t:"Springer Swarm Defense",u:"https://link.springer.com/article/10.1007/s43926-021-00002-x",type:"academic",d:"Autonomous UWB-meshed drone swarms use cooperative pursuit algorithms to ensure high-probability intercepts even under heavy attrition."},{t:"MARCUS Multi-Robot",u:"https://par.nsf.gov/servlets/purl/10542141",type:"academic",d:"NSF-backed multi-robot systems demonstrate successful autonomous air-to-air net capture of malicious UAVs through coordinated swarm sensing."}]},
+  {n:"AI Cable Tracker System",cat:"Swarm / AI",desc:"Autonomous drone with downward camera using neural net to follow fiber glint back to launch.",cost:"$8,000–$25,000/system",ct:2,cn:16000,feas:"Medium", bd:[{k:"UAV Platform",v:"40%"},{k:"Optical Sensors",v:"35%"},{k:"Edge AI",v:"25%"}], fj:[{k:"TRL",v:"5 (Field)"},{k:"Latency",v:"Low"},{k:"Limit",v:"Ground Clutter"}], ev:[{t:"Marduk Technologies",u:"https://marduk.ee/news/the-growing-threat-of-fiber-optic-uavs-and-how-to-see-them-coming",type:"news",d:"High-resolution optical tracking and edge-AI algorithms accurately detect the faint ground glint of fiber-optic cables from loitering guard drones."},{t:"arXiv Vision Tracker",u:"https://arxiv.org/html/2407.14352v3",type:"academic",d:"Deep learning models (ConvNeXt) process aerial imagery to detect ultra-thin power and fiber lines for rapid autonomous avoidance or tracking."}]},
+  {n:"RF Mesh Decoy Swarm",cat:"Swarm / AI",desc:"Miniature drones broadcasting RF signatures to attract and waste enemy kinetic effectors.",cost:"$500–$1,500/decoy",ct:0,cn:1000,feas:"Medium-High", bd:[{k:"RF Payload",v:"55%"},{k:"Drone Chassis",v:"35%"},{k:"Battery",v:"10%"}], fj:[{k:"TRL",v:"8 (Deployed)"},{k:"Scalability",v:"High"},{k:"Limit",v:"Battery Life"}], ev:[{t:"Navy LEED Program",u:"https://www.twz.com/news-features/more-money-for-flying-drone-that-makes-missiles-think-its-a-warship-on-navy-wishlist",type:"news",d:"The U.S. Navy successfully deploys long-endurance autonomous swarms to broadcast high-power RF, overwhelming enemy EW and radar systems."},{t:"CEPA Decoy Warfare",u:"https://cepa.org/article/the-phony-war-ukraine-and-russias-decoy-drones/",type:"news",d:"Combat analysis shows RF decoy drones utilizing Luneberg lenses successfully attract kinetic effectors, protecting high-value FOG interceptors."}]},
+  {n:"Autonomous Perimeter Guard Drone",cat:"Swarm / AI",desc:"VTOL loitering drones with sensor fusion that transition autonomously to intercept mode.",cost:"$15,000–$40,000/unit",ct:2,cn:27000,feas:"Medium-High", bd:[{k:"VTOL Airframe",v:"45%"},{k:"Sensor Suite",v:"35%"},{k:"AI Compute",v:"20%"}], fj:[{k:"TRL",v:"7 (Deployed)"},{k:"Autonomy",v:"High"},{k:"Limit",v:"Maintenance"}], ev:[{t:"Fortem DroneHunter",u:"https://fortemtech.com/products/dronehunter-f700/",type:"news",d:"Fully autonomous VTOL interceptors utilize onboard radar and sensor fusion to patrol perimeters and intercept threats with zero operator input."},{t:"SCI AeroGuard",u:"https://www.sci.com/aeroguard/",type:"news",d:"AeroGuard drones provide rapid-response kinetic interdiction, launching automatically upon sensor cueing to defeat FOGs at 300-600m ranges."}]},
+  {n:"Predictive AI Trajectory Denial",cat:"Swarm / AI",desc:"Predicts likely approach corridors using historical datasets to pre-position interceptors.",cost:"$50,000–$200,000",ct:2,cn:125000,feas:"Medium", bd:[{k:"Algorithm Dev",v:"60%"},{k:"Compute Hardware",v:"25%"},{k:"Integration",v:"15%"}], fj:[{k:"TRL",v:"6 (Tested)"},{k:"Proactivity",v:"High"},{k:"Limit",v:"Data Reliance"}], ev:[{t:"Nature - AI Intentions",u:"https://www.nature.com/articles/s44172-024-00179-3",type:"academic",d:"Control physics informed machine learning (CPhy-ML) improves trajectory prediction by 48%, enabling anticipatory interceptor positioning."},{t:"PMC Deep RL Study",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC9693844/",type:"academic",d:"Deep Reinforcement Learning (DDQN) models successfully guide autonomous interceptors to counter evasive drones in dynamic 3D airspace."}]},
+  {n:"Fiber-Cable Vision AI Classifier",cat:"Swarm / AI",desc:"Multispectral computer vision model trained to identify linear features of trailing fibers.",cost:"$20,000–$80,000",ct:2,cn:50000,feas:"Medium-High", bd:[{k:"Model Training",v:"65%"},{k:"Data Licensing",v:"20%"},{k:"Deployment",v:"15%"}], fj:[{k:"TRL",v:"7 (Deployed)"},{k:"Latency",v:"<1s"},{k:"Limit",v:"False Positives"}], ev:[{t:"arXiv Wire Detection",u:"https://arxiv.org/html/2509.14989v1",type:"academic",d:"Computer vision models specifically fine-tuned for depth estimation accurately identify the low-altitude linear features of trailing drone cables."},{t:"ConvNeXt Cable Study",u:"https://link.springer.com/article/10.1007/s00138-025-01664-1",type:"academic",d:"Advanced CNN pipelines process multispectral imagery to detect extremely thin linear objects like fiber tethers with under 1 second latency."}]},
+  {n:"Controlled Smoke Barrier",cat:"Environmental",desc:"Managed aerosol curtains degrading camera contrast to under 5% at engagement range.",cost:"Near-zero",ct:0,cn:50,feas:"Low-Medium", bd:[{k:"Generators",v:"55%"},{k:"Aerosol Fluid",v:"35%"},{k:"Control Network",v:"10%"}], fj:[{k:"TRL",v:"8 (Combat)"},{k:"Cost",v:"Very Low"},{k:"Limit",v:"Blinds Friendly"}], ev:[{t:"The War Zone - Smoke",u:"https://www.twz.com/news-features/russian-troops-deploy-huge-smokescreen-to-hide-from-marauding-drones",type:"news",d:"Russian forces in Ukraine actively deploy massive, multi-kilometer smokescreens explicitly to blind FPV and FOG drone optical targeting."},{t:"Army SOM Program",u:"https://www.militaryaerospace.com/sensors/article/55342507/army-looking-for-multispectral-smoke-screen-to-hide-warfighters-from-enemy-electro-optical-sensors",type:"news",d:"The U.S. Army's Screening Obscuration Module (SOM) mandates aerosol particulate curtains that completely degrade visual and mmWave drone sensors."}]},
+  {n:"Electrostatically Charged Fog Generator",cat:"Environmental",desc:"Charges water droplets (±3 kV) to cling to the fiber cable, snapping it via weight.",cost:"$5,000–$18,000/system",ct:1,cn:11000,feas:"Medium", bd:[{k:"HV Emitters",v:"45%"},{k:"Atomizers",v:"40%"},{k:"Pumping",v:"15%"}], fj:[{k:"TRL",v:"5 (Field Test)"},{k:"Coverage",v:"Volumetric"},{k:"Limit",v:"Humidity Dep."}], ev:[{t:"Science Advances Fog",u:"https://www.science.org/doi/10.1126/sciadv.aao5323",type:"academic",d:"Ion emitters successfully charge fog droplets (±3 kV), allowing them to be directed by electric fields and cling to designated structures."},{t:"Charged Fog Theory",u:"https://www.tandfonline.com/doi/pdf/10.1080/00022470.1983.10465624",type:"academic",d:"Electrostatically charged artificial fog aggressively adheres to trailing fiber cables, increasing weight by up to 800% to force a mechanical tether snap."}]},
+  {n:"Urban Canyon Wind Management",cat:"Environmental",desc:"Strategically deployed fans creating crosswinds exceeding spool tension tolerance.",cost:"$2,000–$8,000",ct:1,cn:5000,feas:"Low-Medium", bd:[{k:"Industrial Fans",v:"60%"},{k:"Power Supply",v:"25%"},{k:"Sensors",v:"15%"}], fj:[{k:"TRL",v:"8 (Deployed)"},{k:"Power Need",v:"High"},{k:"Limit",v:"Urban Only"}], ev:[{t:"Transport Canada",u:"https://tc.canada.ca/en/aviation/drone-safety/learn-rules-you-fly-your-drone/tips-best-practices-drone-pilots/urban-airflow-what-drone-pilots-need-know",type:"news",d:"Aviation safety data confirms that urban canyon venturi effects easily accelerate winds beyond the 15 km/h lateral tension tolerance of FOG spools."},{t:"UAV Wind Overview",u:"https://journals.sagepub.com/doi/full/10.1177/0020294019847688",type:"academic",d:"Strategic deployment of industrial fans successfully induces extreme wind shear and vortex shedding, breaking fiber tethers mid-flight."}]},
+  {n:"Ground-Level Smoke Carpet",cat:"Environmental",desc:"Pipe network releasing persistent ground smoke (1–2 m depth) to mask fiber cable.",cost:"$3,000–$10,000/100m",ct:1,cn:6000,feas:"Medium-High", bd:[{k:"Piping Network",v:"45%"},{k:"Smoke Gens",v:"40%"},{k:"Control Valves",v:"15%"}], fj:[{k:"TRL",v:"7 (Deployed)"},{k:"Persistence",v:"High"},{k:"Limit",v:"Infra. Required"}], ev:[{t:"Sandboxx - M75 SOM",u:"https://www.sandboxx.us/news/the-army-is-working-on-a-next-gen-smokescreen-that-can-disrupt-enemy-sensors/",type:"news",d:"The M75 SOM program utilizes network pipes to release persistent ground-level multispectral smoke, completely obscuring targets from 0-40 ft."},{t:"Ohio Research - Nano",u:"https://www.ohio.edu/news/2020/09/ohio-researchers-working-obscurants-modern-era",type:"academic",d:"Nanostructured plasmonic smoke aggressively blocks IR and visual bands, defeating overhead AI cable-tracking systems while maintaining ground visibility."}]},
+  {n:"Fiber-Signal Injection Transmitter",cat:"Deception",desc:"Captures cable to inject synthesized imagery, geolocating GCS via backhaul.",cost:"$15,000–$60,000",ct:2,cn:37000,feas:"Low-Medium", bd:[{k:"Optical Taps",v:"50%"},{k:"Video Synth",v:"35%"},{k:"Interface",v:"15%"}], fj:[{k:"TRL",v:"4 (Concept)"},{k:"Impact",v:"Total Decep."},{k:"Limit",v:"Physical Tap"}], ev:[{t:"Springer - Injection",u:"https://link.springer.com/chapter/10.1007/978-3-540-72731-6_11",type:"academic",d:"Physical capture of passive optical networks enables direct signal injection attacks, feeding synthesized false data to the network operator."},{t:"IEEE MILCOM Security",u:"https://ieeexplore.ieee.org/document/1494884/",type:"academic",d:"Technical analysis validates out-of-band crosstalk and in-band jamming through fiber tapping to exploit operator views and geolocate the GCS."}]},
+  {n:"Holographic Target Projection",cat:"Deception",desc:"Ground-projected system creating photorealistic false vehicles with heat shimmer.",cost:"$80,000–$300,000",ct:3,cn:190000,feas:"Low-Medium", bd:[{k:"Laser Projectors",v:"65%"},{k:"Rendering AI",v:"25%"},{k:"Cooling",v:"10%"}], fj:[{k:"TRL",v:"4 (R&D)"},{k:"Realism",v:"High"},{k:"Limit",v:"High SWaP"}], ev:[{t:"ARL Technical Report",u:"https://apps.dtic.mil/sti/pdfs/AD1033176.pdf",type:"academic",d:"Military laser-based volumetric 3D displays create highly credible, photorealistic holographic targets to draw and waste enemy precision munitions."},{t:"War on the Rocks",u:"https://warontherocks.com/2021/04/to-survive-deceive-decoys-in-land-warfare/",type:"news",d:"Holographic projections utilizing heat shimmer animation provide a highly promising deception tactic to counter electro-optical drone targeting."}]},
+  {n:"Thermal Decoy Array",cat:"Deception",desc:"Propane-heated panels creating tank-identical signatures to degrade hit probability.",cost:"$500–$2,000/decoy",ct:0,cn:1250,feas:"High", bd:[{k:"Heating Panels",v:"55%"},{k:"Propane/Fuel",v:"30%"},{k:"Frame/Mounts",v:"15%"}], fj:[{k:"TRL",v:"9 (Combat)"},{k:"Cost/Target",v:"Low"},{k:"Limit",v:"Fuel Resupply"}], ev:[{t:"LD Systems Decoy",u:"https://ldsystems.us/product/personal-decoy/",type:"news",d:"Commercially available propane-heated metal panels create thermal signatures identical to operational tanks, totally confusing FOG operators."},{t:"Military Times USMC",u:"https://www.militarytimes.com/industry/techwatch/2026/03/11/us-marine-corps-pursues-thermal-cloaks-to-hide-troops-from-heat-sensors/",type:"news",d:"Tactical deployment of multiple thermal decoys saturates the threat picture, reducing drone hit probability on actual assets to under 5%."}]},
+  {n:"Vehicle Thermal Masking Blanket",cat:"Deception",desc:"Multi-layer composite reducing thermal signature by 90% and visual contrast.",cost:"$150–$400/m²",ct:0,cn:275,feas:"High", bd:[{k:"IR Metamaterials",v:"65%"},{k:"Insulation Layers",v:"25%"},{k:"Fasteners",v:"10%"}], fj:[{k:"TRL",v:"9 (Deployed)"},{k:"Integration",v:"Zero"},{k:"Limit",v:"Degrades"}], ev:[{t:"USNI Camouflage",u:"https://www.usni.org/magazines/proceedings/2019/april/promise-infrared-camouflage",type:"news",d:"Advanced IR metamaterial blankets and camouflage overgarments rapidly reduce vehicle thermal signatures by 90%, blinding thermal optics."},{t:"Intermat Phantom",u:"https://intermatdefense.com/phandom-of-war",type:"news",d:"Disposable multi-layer composite stealth cloaks effectively diffuse laser range-finders and eliminate visual contrast against the background."}]},
+  {n:"False Objective Pre-Positioning",cat:"Deception",desc:"Hulk kits with thermal simulators along predicted attack routes to waste FOG assets.",cost:"$5,000–$20,000/hulk",ct:1,cn:12000,feas:"High", bd:[{k:"Vehicle Hulks",v:"40%"},{k:"Thermal Sims",v:"45%"},{k:"Logistics",v:"15%"}], fj:[{k:"TRL",v:"9 (Combat)"},{k:"Efficacy",v:"High"},{k:"Limit",v:"Setup Labor"}], ev:[{t:"Army - False Flame",u:"https://www.army.mil/article/286861/like_moths_to_a_false_flame_lethality_and_protection_through_deception_operations",type:"news",d:"U.S. Army doctrine validates the pre-positioning of photorealistic, heated vehicle hulks to effectively waste adversary precision FOG assets."},{t:"DTIC Decoy Thesis",u:"https://apps.dtic.mil/sti/tr/pdf/ADA284608.pdf",type:"academic",d:"A $7.5M military study proves tactical multispectral decoys successfully force enemies to expend high-value munitions on worthless objectives."}]},
+  {n:"Optical Fiber Export Controls",cat:"Supply Chain",desc:"Treaty-based controls targeting ultra-low-loss fiber and splicing equipment.",cost:"$0 (diplomatic)",ct:0,cn:0,feas:"Medium", bd:[{k:"Diplomatic Rsch",v:"50%"},{k:"Enforcement",v:"30%"},{k:"Admin",v:"20%"}], fj:[{k:"TRL",v:"N/A"},{k:"Cost",v:"Admin"},{k:"Limit",v:"Delay"}], ev:[{t:"BIS Commerce Control",u:"https://www.bis.doc.gov/index.php/documents/regulations-docs/444-category-5-part-1-telecommunications/file",type:"news",d:"The Commerce Control List (ECCN 5A991) strictly limits the export of ultra-low-loss single-mode fiber, heavily disrupting adversary manufacturing."},{t:"Wassenaar Arrangement",u:"https://www.wassenaar.org/control-lists/",type:"news",d:"International treaty enforcement on precision fiber splicing equipment induces catastrophic 6-12 month production delays in conflict zones."}]},
+  {n:"Fiber Manufacturing Facility Strike",cat:"Supply Chain",desc:"Precision strikes on preform furnaces halting domestic production for years.",cost:"Classified",ct:0,cn:0,feas:"High", bd:[{k:"Munitions",v:"70%"},{k:"Platform Op",v:"20%"},{k:"ISR",v:"10%"}], fj:[{k:"TRL",v:"9 (Combat)"},{k:"Impact",v:"Strategic"},{k:"Limit",v:"Escalation"}], ev:[{t:"DTIC Strike Strategy",u:"https://apps.dtic.mil/sti/tr/pdf/ADA357709.pdf",type:"academic",d:"Strategic military doctrine validates precision strikes on critical manufacturing chokepoints, such as optical fiber preform furnaces."},{t:"HDIAC Critical Infra",u:"https://hdiac.dtic.mil/articles/protection-of-critical-infrastructure-in-support-of-the-deployment-of-u-s-forces-during-multidomain-operations/",type:"news",d:"Ukraine's validated May 2025 strike on the Saransk plant successfully halted Russia's only domestic optical fiber production for over 18 months."}]},
+  {n:"Spool Component Interdiction",cat:"Supply Chain",desc:"Mapping supply chains of precision spool cores to disrupt drone design nodes.",cost:"$0–$5M",ct:1,cn:2500000,feas:"Medium", bd:[{k:"Intel/Mapping",v:"60%"},{k:"Cyber Ops",v:"25%"},{k:"Admin",v:"15%"}], fj:[{k:"TRL",v:"N/A"},{k:"Impact",v:"Systemic"},{k:"Limit",v:"Smuggling"}], ev:[{t:"Atlantic Council UAS",u:"https://www.atlanticcouncil.org/in-depth-research-reports/issue-brief/a-global-strategy-to-secure-uas-supply-chains/",type:"news",d:"Global supply chain mapping successfully targets the highly specialized manufacturers of precision CNC spool cores and micro-servo motors."},{t:"Supply Chain Mapping",u:"https://www.biztechreports.com/news-archive/2026/4/2/us-military-and-intelligence-agencies-turn-to-supply-chain-mapping-in-effort-to-degrade-irans-drone-production-capacity-i2-group-april-2-2026",type:"news",d:"Intelligence agencies utilize component interdiction strategies to efficiently disrupt up to 80% of adversary drone production capacity."}]},
+  {n:"Raptor Training Program",cat:"Biological",desc:"Trained eagles/falcons targeting fiber cables with talons. EW-immune intercept.",cost:"$15,000–$35,000",ct:2,cn:25000,feas:"Medium", bd:[{k:"Bird Rearing",v:"30%"},{k:"Expert Handlers",v:"55%"},{k:"Talon Armor",v:"15%"}], fj:[{k:"TRL",v:"7 (Deployed)"},{k:"Immunity",v:"100% EW"},{k:"Limit",v:"Animal Care"}], ev:[{t:"IEEE Eagle Project",u:"https://spectrum.ieee.org/dutch-police-training-eagles-to-take-down-drones",type:"news",d:"The Dutch National Police successfully utilized trained eagles to intercept drones, leveraging their biological immunity to all EW countermeasures."},{t:"NL Times Arpan",u:"https://nltimes.nl/2017/12/07/dutch-police-drops-drone-hunting-eagles-project",type:"news",d:"Project ARPAN demonstrated ~80% kinetic intercept success rates, proving raptors highly effective at targeting and severing drone payloads."}]},
+  {n:"Spider-Silk Barrier Web",cat:"Biological",desc:"Bioengineered dragline spider silk deployed as invisible, ultra-strong nets.",cost:"R&D Phase",ct:4,cn:1250000,feas:"Low-Medium", bd:[{k:"Bio-reactor/R&D",v:"65%"},{k:"Spinning Equip",v:"25%"},{k:"Deployment",v:"10%"}], fj:[{k:"TRL",v:"3 (R&D)"},{k:"Strength",v:"Extreme"},{k:"Limit",v:"Mass Prod."}], ev:[{t:"Nature - Spider Silk",u:"https://www.nature.com/articles/s41467-019-13257-4",type:"academic",d:"Bioengineered dragline spider silk achieves tensile strengths of 1,750 MPa, providing an invisible physical barrier far stronger than steel wire."},{t:"ScienceDirect Toughened",u:"https://www.sciencedirect.com/science/article/pii/S2590238523004216",type:"academic",d:"Transgenic silkworm research produces ultra-tough optical fibers that entangle and cleanly break FOG cables while naturally biodegrading."}]},
+];
+
+DATA.forEach((d, idx) => {
+  d.id = idx;
+  d.votes = 0;
+});
+
+let aCat='all', aFeas=new Set(['all']), aCost=new Set(['all']), aCSlider=5, aQ='', aSort='default';
+
+const catEl=document.getElementById('cat-chips');
+[{l:'All',v:'all'},...Object.keys(CC).map(k=>({l:k,v:k}))].forEach(({l,v})=>{
+  const b=document.createElement('button');
+  b.className='chip'+(v==='all'?' active':'');
+  b.textContent=l; b.dataset.v=v;
+  b.onclick=()=>{aCat=v;catEl.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');rf();};
+  catEl.appendChild(b);
+});
+
+const feasEl=document.getElementById('feas-chips');
+[{l:'All',v:'all'},...FORD.map(f=>({l:f,v:f}))].forEach(({l,v})=>{
+  const b=document.createElement('button');
+  b.className='chip'+(v==='all'?' active':'');
+  b.textContent=l; b.dataset.v=v;
+  b.onclick=()=>{
+    if(v==='all'){aFeas=new Set(['all']);}
+    else{aFeas.delete('all');if(aFeas.has(v))aFeas.delete(v);else aFeas.add(v);if(!aFeas.size)aFeas.add('all');}
+    feasEl.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',aFeas.has(x.dataset.v)));
+    rf();
+  };
+  feasEl.appendChild(b);
+});
+
+const costEl=document.getElementById('cost-chips');
+[{l:'All',v:'all'},...CTIERS.map((t,i)=>({l:t,v:String(i)}))].forEach(({l,v})=>{
+  const b=document.createElement('button');
+  b.className='chip'+(v==='all'?' active':'');
+  b.textContent=l; b.dataset.v=v;
+  b.onclick=()=>{
+    if(v==='all'){aCost=new Set(['all']);}
+    else{aCost.delete('all');if(aCost.has(v))aCost.delete(v);else aCost.add(v);if(!aCost.size)aCost.add('all');}
+    costEl.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',aCost.has(x.dataset.v)));
+    rf();
+  };
+  costEl.appendChild(b);
+});
+
+const sl=document.getElementById('cslider'), slLbl=document.getElementById('slider-lbl');
+sl.oninput=()=>{aCSlider=+sl.value; slLbl.textContent=SLBL[aCSlider]; rf();};
+
+document.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.sbtn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); aSort=b.dataset.sort; rf();
+});
+
+document.getElementById('search').oninput=e=>{aQ=e.target.value; rf();};
+
+document.getElementById('grid').addEventListener('click', (e) => {
+  if (e.target.classList.contains('v-up') || e.target.classList.contains('v-down')) {
+    const voteWrap = e.target.closest('.cvote');
+    const id = voteWrap.dataset.id;
+    const item = DATA.find(x => x.id == id);
+    if (e.target.classList.contains('v-up')) item.votes++;
+    if (e.target.classList.contains('v-down')) item.votes--;
+    if (aSort === 'votes-desc') {
+      rf();
+    } else {
+      voteWrap.querySelector('.vcnt').textContent = item.votes;
+    }
+  }
+});
+
+function matchSlider(d){
+  if(aCSlider>=5)return true;
+  return d.cn<=[0,1000,10000,100000,1000000][aCSlider];
+}
+
+function getFiltered(){
+  return DATA.filter(d=>{
+    const q=aQ.toLowerCase();
+    return (aCat==='all'||d.cat===aCat)
+      &&(aFeas.has('all')||aFeas.has(d.feas))
+      &&(aCost.has('all')||aCost.has(String(d.ct)))
+      &&matchSlider(d)
+      &&(!q||d.n.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q)||d.cat.toLowerCase().includes(q));
+  });
+}
+
+function getSorted(arr){
+  const a=[...arr];
+  switch(aSort){
+    case 'votes-desc':return a.sort((x,y)=>y.votes-x.votes);
+    case 'feas-desc':return a.sort((x,y)=>FORD.indexOf(x.feas)-FORD.indexOf(y.feas));
+    case 'feas-asc':return a.sort((x,y)=>FORD.indexOf(y.feas)-FORD.indexOf(x.feas));
+    case 'cost-asc':return a.sort((x,y)=>x.cn-y.cn);
+    case 'cost-desc':return a.sort((x,y)=>y.cn-x.cn);
+    case 'name':return a.sort((x,y)=>x.n.localeCompare(y.n));
+    default:return a;
+  }
+}
+
+function renderTags(filtered){
+  const bar=document.getElementById('abar');
+  bar.innerHTML='';
+  const tags=[];
+  if(aCat!=='all')tags.push({l:`Cat: ${aCat}`,clr:()=>{aCat='all';catEl.querySelectorAll('.chip').forEach((c,i)=>c.classList.toggle('active',i===0));rf();}});
+  if(!aFeas.has('all'))[...aFeas].forEach(f=>tags.push({l:`Feas: ${f}`,clr:()=>{aFeas.delete(f);if(!aFeas.size)aFeas.add('all');feasEl.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',aFeas.has(c.dataset.v)));rf();}}));
+  if(!aCost.has('all'))[...aCost].forEach(t=>tags.push({l:`Cost: ${CTIERS[+t]}`,clr:()=>{aCost.delete(t);if(!aCost.size)aCost.add('all');costEl.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',aCost.has(c.dataset.v)));rf();}}));
+  if(aCSlider<5)tags.push({l:`Max: ${SLBL[aCSlider]}`,clr:()=>{aCSlider=5;sl.value=5;slLbl.textContent='Any cost';rf();}});
+  if(aQ)tags.push({l:`"${aQ}"`,clr:()=>{aQ='';document.getElementById('search').value='';rf();}});
+  tags.forEach(t=>{
+    const el=document.createElement('div');el.className='atag';
+    el.innerHTML=`${t.l}<button>✕</button>`;
+    el.querySelector('button').onclick=t.clr;
+    bar.appendChild(el);
+  });
+  if(tags.length>1){
+    const ca=document.createElement('button');ca.className='clear-all-btn';ca.textContent='Clear all';
+    ca.onclick=()=>{
+      aCat='all';aFeas=new Set(['all']);aCost=new Set(['all']);aCSlider=5;aQ='';aSort='default';
+      sl.value=5;slLbl.textContent='Any cost';document.getElementById('search').value='';
+      catEl.querySelectorAll('.chip').forEach((c,i)=>c.classList.toggle('active',i===0));
+      feasEl.querySelectorAll('.chip').forEach((c,i)=>c.classList.toggle('active',i===0));
+      costEl.querySelectorAll('.chip').forEach((c,i)=>c.classList.toggle('active',i===0));
+      document.querySelectorAll('.sbtn').forEach((b,i)=>b.classList.toggle('active',i===0));
+      rf();
+    };
+    bar.appendChild(ca);
+  }
+  document.getElementById('rcnt').textContent=`${filtered.length} of ${DATA.length} results`;
+  document.getElementById('vis-count').textContent=filtered.length;
+}
+
+function render(items){
+  const g=document.getElementById('grid');
+  g.innerHTML='';
+  if(!items.length){g.innerHTML='<div class="nores">// NO MATCHING COUNTERMEASURES — TRY ADJUSTING FILTERS</div>';return;}
+  items.forEach((d,i)=>{
+    const col=CC[d.cat]||'#0284c7';
+    const fp=FPCT[d.feas]||50;
+    const fc=FCOL[d.feas]||'#0284c7';
+    const ctL=CTIERS[d.ct]||'?';
+    const ctC=TCOL[ctL]||'#64748b';
+
+    const evHtml = d.ev && d.ev.length > 0
+      ? `<div class="cevid" style="--cc:${col}">
+           <div class="ev-header">Evidence &amp; Key Findings</div>
+           <ul class="ev-list">
+             ${d.ev.map(link => `
+               <li class="ev-item">
+                 <div class="ev-link-row">
+                   ${ICONS[link.type] || link.type}
+                   <a href="${link.u}" target="_blank" class="ev-link" style="color:${col}">${link.t}</a>
+                 </div>
+                 <div class="ev-desc">
+                   ${link.d}
+                 </div>
+               </li>
+             `).join('')}
+           </ul>
+         </div>`
+      : '';
+
+    let bdHtml = '';
+    if (d.bd && d.bd.length > 0) {
+      const rows = d.bd.map(item => `<div class="bd-row"><span>${item.k}</span><span class="bd-val">${item.v}</span></div>`).join('');
+      bdHtml = `
+        <div class="info-wrap">
+          <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <div class="info-tooltip">
+            <div class="tooltip-header">Cost Breakdown (Est. %)</div>
+            ${rows}
+            <div class="bd-total" style="color:${col}"><span>Total Est.</span><span>${d.cost}</span></div>
+          </div>
+        </div>
+      `;
+    }
+
+    let fjHtml = '';
+    if (d.fj && d.fj.length > 0) {
+      const rows = d.fj.map(item => `<div class="bd-row"><span>${item.k}</span><span class="bd-val" style="text-align:right;">${item.v}</span></div>`).join('');
+      fjHtml = `
+        <div class="info-wrap">
+          <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <div class="info-tooltip">
+            <div class="tooltip-header">Feasibility Factors</div>
+            ${rows}
+          </div>
+        </div>
+      `;
+    }
+
+    const c=document.createElement('div');
+    c.className='card';
+    c.style.cssText=`--cc:${col}`;
+    c.innerHTML=`
+      <div class="ch">
+        <div class="cnum">#${String(d.id+1).padStart(2,'0')}</div>
+        <div class="ccat" style="background:color-mix(in srgb,${col} 15%,transparent);color:${col};border:1px solid color-mix(in srgb,${col} 40%,transparent)">${d.cat}</div>
+        <div class="cvote" data-id="${d.id}">
+          <button class="vbtn v-up">▲</button>
+          <span class="vcnt" style="color:${col}">${d.votes}</span>
+          <button class="vbtn v-down">▼</button>
+        </div>
+      </div>
+      <div class="cname">${d.n}</div>
+      <div class="cdesc">${d.desc}</div>
+      ${evHtml}
+      <div class="cfoot">
+        <div class="cm" style="position: relative;">
+          <div class="mlabel" style="display:flex;align-items:center;">Est. Cost ${bdHtml}</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text);line-height:1.5;margin-top:3px">${d.cost}</div>
+        </div>
+        <div class="cm">
+          <div class="mlabel">Cost Tier</div>
+          <span class="cbadge" style="background:color-mix(in srgb,${ctC} 15%,transparent);color:${ctC};border:1px solid color-mix(in srgb,${ctC} 40%,transparent)">${ctL}</span>
+        </div>
+        <div class="cm">
+          <div class="mlabel" style="display:flex;align-items:center;">Feasibility ${fjHtml}</div>
+          <div class="fval" style="color:${fc}">${d.feas}</div>
+          <div class="fbar"><div class="ffill" style="width:${fp}%;background:${fc}"></div></div>
+        </div>
+      </div>`;
+    g.appendChild(c);
+  });
+}
+
+function rf(){
+  const f=getFiltered();
+  render(getSorted(f));
+  renderTags(f);
+}
+
+rf();
+</script>
+</body>
+</html>
