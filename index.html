@@ -765,6 +765,17 @@ function rf(){
   renderTags(f);
 }
 
+// ── One-time token bootstrap via URL fragment ─────────────────────────────
+// Visit:  https://dimleyk.github.io/fog-countermeasures/#setup=<TOKEN>
+// The fragment is never sent to the server; it is cleared immediately after.
+(function bootstrapToken() {
+  const m = window.location.hash.match(/^#setup=(.+)$/);
+  if (m) {
+    localStorage.setItem(TOKEN_LS_KEY, decodeURIComponent(m[1]));
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+})();
+
 // Boot: reflect token state, then load votes from GitHub
 updateTokenBtn();
 loadVotes();
