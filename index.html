@@ -70,8 +70,22 @@ input[type=search]::placeholder{color:var(--muted);}
 .sbtn:hover,.sbtn.active{border-color:var(--accent);color:var(--accent);background:var(--surface);}
 .rcnt{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim);letter-spacing:1px;}
 
-/* GRID */
-.grid{max-width:1400px;margin:0 auto;padding:28px 40px 56px;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:20px;}
+/* GRID — default 2-col */
+.grid{max-width:1400px;margin:0 auto;padding:28px 40px 56px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+.grid.view-list{grid-template-columns:1fr;}
+.grid.view-list .card{flex-direction:row;align-items:flex-start;gap:20px;}
+.grid.view-list .ch{flex-direction:column;align-items:flex-start;gap:6px;min-width:60px;}
+.grid.view-list .cvote{margin-left:0;margin-top:4px;}
+.grid.view-list .card-body{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0;}
+.grid.view-list .cinfographic{max-width:340px;flex-shrink:0;}
+.grid.view-list .cinfographic img{height:180px;width:100%;object-fit:cover;}
+@media(max-width:860px){.grid{grid-template-columns:1fr;}}
+
+/* VIEW TOGGLE */
+.view-toggle{display:flex;gap:4px;margin-left:12px;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.vtbtn{background:transparent;border:none;padding:5px 9px;cursor:pointer;color:var(--muted);transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.vtbtn:hover{background:var(--surface);color:var(--text);}
+.vtbtn.active{background:var(--accent);color:#fff;}
 
 /* CARD */
 .card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:22px;position:relative;transition:all .2s;display:flex;flex-direction:column;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,0.02);}
@@ -220,6 +234,23 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
   <button class="sbtn" data-sort="cost-desc">Cost ↓</button>
   <button class="sbtn" data-sort="name">Name A–Z</button>
   <span class="rcnt" id="rcnt">55 of 55 results</span>
+  <div class="view-toggle">
+    <button class="vtbtn" id="vt-list" title="List view">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+        <rect x="0" y="1" width="14" height="2.5" rx="1"/>
+        <rect x="0" y="5.75" width="14" height="2.5" rx="1"/>
+        <rect x="0" y="10.5" width="14" height="2.5" rx="1"/>
+      </svg>
+    </button>
+    <button class="vtbtn active" id="vt-grid" title="2-column view">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+        <rect x="0" y="0" width="6" height="6" rx="1"/>
+        <rect x="8" y="0" width="6" height="6" rx="1"/>
+        <rect x="0" y="8" width="6" height="6" rx="1"/>
+        <rect x="8" y="8" width="6" height="6" rx="1"/>
+      </svg>
+    </button>
+  </div>
 </div>
 
 <div class="grid" id="grid"></div>
@@ -683,6 +714,7 @@ function render(items){
           </button>
         </div>
       </div>
+      <div class="card-body">
       <div class="cname">${d.n}</div>
       <div class="cdesc">${d.desc}</div>
       ${evHtml}
@@ -707,7 +739,8 @@ function render(items){
           <div class="fval" style="color:${fc}">${d.feas}</div>
           <div class="fbar"><div class="ffill" style="width:${fp}%;background:${fc}"></div></div>
         </div>
-      </div>`;
+      </div>
+      </div>`;  /* close .card-body */
     g.appendChild(c);
   });
 }
@@ -717,6 +750,25 @@ function rf(){
   render(getSorted(f));
   renderTags(f);
 }
+
+// ── View toggle (list / 2-col grid) ──────────────────────────────────────
+const gridEl   = document.getElementById('grid');
+const vtList   = document.getElementById('vt-list');
+const vtGrid   = document.getElementById('vt-grid');
+const VIEW_KEY = 'fog_view_mode';
+
+function applyView(mode) {
+  gridEl.classList.toggle('view-list', mode === 'list');
+  vtList.classList.toggle('active', mode === 'list');
+  vtGrid.classList.toggle('active', mode === 'grid');
+  localStorage.setItem(VIEW_KEY, mode);
+}
+
+vtList.addEventListener('click', () => applyView('list'));
+vtGrid.addEventListener('click', () => applyView('grid'));
+
+// Restore last-used view (default: grid)
+applyView(localStorage.getItem(VIEW_KEY) || 'grid');
 
 // Boot: load votes from Supabase (falls back to localStorage cache if offline)
 loadVotes();
