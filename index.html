@@ -113,6 +113,26 @@ input[type=search]::placeholder{color:var(--muted);}
   border-radius:5px;
 }
 
+/* COMMENTS */
+.ccomments{margin-top:4px;border-top:1px solid var(--border);padding-top:12px;}
+.cc-toggle{background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:0;transition:color .15s;}
+.cc-toggle:hover{color:var(--accent);}
+.cc-toggle svg{flex-shrink:0;}
+.cc-toggle .cc-badge{background:var(--accent);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;min-width:16px;text-align:center;}
+.cc-body{display:none;margin-top:10px;flex-direction:column;gap:8px;}
+.cc-body.open{display:flex;}
+.cc-list{display:flex;flex-direction:column;gap:7px;}
+.cc-item{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:9px 12px;}
+.cc-meta{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:4px;letter-spacing:.5px;}
+.cc-text{font-size:13px;color:var(--text-dim);line-height:1.6;}
+.cc-form{display:flex;gap:6px;margin-top:4px;}
+.cc-input{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);padding:7px 11px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;border-radius:4px;outline:none;transition:border-color .15s;resize:none;}
+.cc-input:focus{border-color:var(--accent);}
+.cc-submit{background:var(--accent);color:#fff;border:none;padding:7px 14px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:background .15s;white-space:nowrap;align-self:flex-end;}
+.cc-submit:hover{background:#0369a1;}
+.cc-submit:disabled{opacity:.5;cursor:default;}
+.cc-empty{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1px;}
+
 /* VIEW TOGGLE */
 .view-toggle{display:flex;gap:0;margin-left:12px;border:1px solid var(--border);border-radius:4px;overflow:hidden;}
 .vtbtn{background:transparent;border:none;padding:5px 10px;cursor:pointer;color:var(--muted);transition:all .15s;display:flex;align-items:center;justify-content:center;}
@@ -822,7 +842,21 @@ function render(items){
                loading="lazy"
                onerror="this.closest('.cinfographic').style.display='none'">
           <span class="infog-label">Infographic</span>
-        </div>` : ''}`;  /* infographic is sibling of card-body for list-view grid placement */
+        </div>` : ''}
+      <div class="ccomments" data-id="${d.id}">
+        <button class="cc-toggle" onclick="toggleComments(this,${d.id})">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+          Comments
+          <span class="cc-badge" id="cc-cnt-${d.id}">${(d.comments||[]).length||''}</span>
+        </button>
+        <div class="cc-body" id="cc-body-${d.id}">
+          <div class="cc-list" id="cc-list-${d.id}"></div>
+          <div class="cc-form">
+            <textarea class="cc-input" id="cc-inp-${d.id}" rows="2" placeholder="Leave feedback…"></textarea>
+            <button class="cc-submit" onclick="submitComment(${d.id})">Post</button>
+          </div>
+        </div>
+      </div>`;  /* infographic + comments are siblings of card-body for list-view grid placement */
     g.appendChild(c);
   });
 }
@@ -831,6 +865,91 @@ function rf(){
   const f=getFiltered();
   render(getSorted(f));
   renderTags(f);
+}
+
+// ── COMMENTS — Supabase-backed per-card feedback ──────────────────────────
+const CC_HEADERS = { ...SB_HEADERS };  // reuse Supabase headers
+
+// Load all comments for a given item and render them
+async function loadComments(itemId) {
+  const listEl  = document.getElementById(`cc-list-${itemId}`);
+  const cntEl   = document.getElementById(`cc-cnt-${itemId}`);
+  if (!listEl) return;
+
+  try {
+    const resp = await fetch(
+      `${SB_URL}/rest/v1/comments?item_id=eq.${itemId}&order=created_at.asc&select=text,created_at`,
+      { headers: CC_HEADERS }
+    );
+    if (!resp.ok) return;
+    const rows = await resp.json();
+
+    // Update badge
+    cntEl.textContent = rows.length || '';
+    cntEl.style.display = rows.length ? '' : 'none';
+
+    // Render list
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="cc-empty">// NO COMMENTS YET</div>';
+      return;
+    }
+    listEl.innerHTML = rows.map(r => {
+      const ago = timeAgo(new Date(r.created_at));
+      return `<div class="cc-item">
+        <div class="cc-meta">${ago}</div>
+        <div class="cc-text">${escHtml(r.text)}</div>
+      </div>`;
+    }).join('');
+  } catch(e) { /* silent fail */ }
+}
+
+async function submitComment(itemId) {
+  const inp = document.getElementById(`cc-inp-${itemId}`);
+  const btn = inp.closest('.cc-form').querySelector('.cc-submit');
+  const text = inp.value.trim();
+  if (!text) return;
+
+  btn.disabled = true;
+  try {
+    const resp = await fetch(`${SB_URL}/rest/v1/comments`, {
+      method: 'POST',
+      headers: { ...CC_HEADERS, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ item_id: itemId, text })
+    });
+    if (resp.ok) {
+      inp.value = '';
+      await loadComments(itemId);
+    }
+  } catch(e) { /* silent */ }
+  btn.disabled = false;
+}
+
+function toggleComments(btn, itemId) {
+  const body = document.getElementById(`cc-body-${itemId}`);
+  const isOpen = body.classList.toggle('open');
+  if (isOpen) loadComments(itemId);
+}
+
+// Allow Ctrl+Enter to submit
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    const inp = e.target.closest('.cc-input');
+    if (inp) {
+      const id = +inp.id.replace('cc-inp-', '');
+      submitComment(id);
+    }
+  }
+});
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function timeAgo(date) {
+  const s = Math.floor((Date.now() - date) / 1000);
+  if (s < 60)  return 'just now';
+  if (s < 3600) return `${Math.floor(s/60)}m ago`;
+  if (s < 86400) return `${Math.floor(s/3600)}h ago`;
+  return `${Math.floor(s/86400)}d ago`;
 }
 
 // ── View toggle (list / 2-col grid) ──────────────────────────────────────
