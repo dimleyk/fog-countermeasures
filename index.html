@@ -482,6 +482,13 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
   </div>
 </div>
 
+<!-- LIGHTBOX OVERLAY — must live before <script> so getElementById finds it -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lb-close" id="lb-close" aria-label="Close">&#x2715;</button>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-caption" id="lb-caption"></div>
+</div>
+
 <div class="grid" id="grid"></div>
 
 <script>
@@ -1536,12 +1543,5 @@ document.addEventListener('keydown', e => {
 rf();
 loadVotes();
 </script>
-
-<!-- LIGHTBOX OVERLAY -->
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-  <button class="lb-close" id="lb-close" aria-label="Close">&#x2715;</button>
-  <img id="lb-img" src="" alt="">
-  <div class="lb-caption" id="lb-caption"></div>
-</div>
 </body>
 </html>
