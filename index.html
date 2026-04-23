@@ -1520,9 +1520,9 @@ function applyView(mode) {
 vtList.addEventListener('click', () => applyView('list'));
 vtGrid.addEventListener('click', () => applyView('grid'));
 
-// Restore last-used view (default: grid)
-applyView(localStorage.getItem(VIEW_KEY) || 'grid');
-
+// Restore last-used view (default: list)
+applyView(localStorage.getItem(VIEW_KEY) || 'list');
+  
 // ── INFO TOOLTIP — click toggle + overflow-safe repositioning ─────────────
 document.addEventListener('click', e => {
   const wrap = e.target.closest('.info-wrap');
