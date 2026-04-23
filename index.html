@@ -408,6 +408,23 @@ body::after{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:r
   .fchips::-webkit-scrollbar { height: 2px; }
   .fchips::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 1px; }
 }
+
+  /* --- Add this before your </style> tag --- */
+.c-product-links {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(2, 132, 199, 0.05);
+  border: 1px dashed var(--accent);
+  border-radius: 4px;
+}
+.c-product-links .ev-header { margin-bottom: 8px; color: var(--accent); }
+.prod-link {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+  color: var(--text); text-decoration: none; padding: 4px 0;
+}
+.prod-link:hover { color: var(--accent); text-decoration: underline; }
+.prod-link svg { width: 14px; height: 14px; }
 </style>
 </head>
 <body>
@@ -1188,6 +1205,7 @@ function render(items){
   const g=document.getElementById('grid');
   g.innerHTML='';
   if(!items.length){g.innerHTML='<div class="nores">// NO MATCHING COUNTERMEASURES — TRY ADJUSTING FILTERS</div>';return;}
+
   items.forEach((d,i)=>{
     const col=CC[d.cat]||'#0284c7';
     const fp=FPCT[d.feas]||50;
@@ -1195,25 +1213,38 @@ function render(items){
     const ctL=CTIERS[d.ct]||'?';
     const ctC=TCOL[ctL]||'#64748b';
 
-    const evHtml = d.ev && d.ev.length > 0
-      ? `<div class="cevid" style="--cc:${col}">
-           <div class="ev-header">Evidence &amp; Key Findings</div>
-           <ul class="ev-list">
-             ${d.ev.map(link => `
-               <li class="ev-item">
-                 <div class="ev-link-row">
-                   ${ICONS[link.type] || link.type}
-                   <a href="${link.u}" target="_blank" class="ev-link" style="color:${col}">${link.t}</a>
-                 </div>
-                 <div class="ev-desc">
-                   ${link.d}
-                 </div>
-               </li>
-             `).join('')}
-           </ul>
-         </div>`
-      : '';
+    // 1. SPLIT DATA: Separate 'product' links from other evidence
+    const allEv = d.ev || [];
+    const productLinks = allEv.filter(l => (l.type || '').toLowerCase() === 'product');
+    const evidenceItems = allEv.filter(l => (l.type || '').toLowerCase() !== 'product');
 
+    // 2. BUILD EVIDENCE HTML (Only non-products)
+    const evHtml = evidenceItems.length > 0 ? `
+      <div class="cevid" style="--cc:${col}">
+        <div class="ev-header">Evidence &amp; Key Findings</div>
+        <ul class="ev-list">
+          ${evidenceItems.map(link => `
+            <li class="ev-item">
+              <div class="ev-link-row">
+                ${ICONS[link.type] || link.type}
+                <a href="${link.u}" target="_blank" class="ev-link" style="color:${col}">${link.t}</a>
+              </div>
+              <div class="ev-desc">${link.d}</div>
+            </li>`).join('')}
+        </ul>
+      </div>` : '';
+
+    // 3. BUILD PRODUCT HTML (Only products)
+    const productHtml = productLinks.length > 0 ? `
+      <div class="c-product-links">
+        <div class="ev-header">Related Products</div>
+        ${productLinks.map(link => `
+          <a href="${link.u}" target="_blank" class="prod-link">
+            ${ICONS['product'] || ''} ${link.t}
+          </a>`).join('')}
+      </div>` : '';
+    
+   
     let bdHtml = '';
     if (d.bd && d.bd.length > 0) {
       const rows = d.bd.map(item => `<div class="bd-row"><span>${item.k}</span><span class="bd-val">${item.v}</span></div>`).join('');
