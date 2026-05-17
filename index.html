@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FOG Countermeasures — 55 Innovative Solutions</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap"></noscript>
 <style>
 :root{
   /* High Contrast Light Palette */
@@ -46,8 +49,15 @@ h1 span{color:var(--accent);}
 .chip.active{background:var(--cc,var(--accent));color:#fff;border-color:var(--cc,var(--accent));font-weight:700;}
 .range-wrap{display:flex;align-items:center;gap:16px;flex:1;}
 .range-out{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--accent);min-width:130px;font-weight:600;}
-input[type=range]{flex:1;max-width:300px;-webkit-appearance:none;height:5px;background:var(--border);border-radius:3px;outline:none;cursor:pointer;transition:background .3s;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+input[type=range]{flex:1;max-width:300px;-webkit-appearance:none;height:5px;background:var(--border);border-radius:3px;outline:none;cursor:pointer;transition:background .3s;touch-action:pan-x;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:none;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+/* Larger hit area on mobile */
+@media (max-width: 768px) {
+  input[type=range]{height:8px;}
+  input[type=range]::-webkit-slider-thumb{width:28px;height:28px;}
+  input[type=range]::-moz-range-thumb{width:28px;height:28px;}
+}
 input[type=range]::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--accent);border:none;box-shadow:0 1px 4px rgba(0,0,0,.2);}
 #rw-slider::-webkit-slider-thumb{background:#3b82f6;}
 #rw-slider::-moz-range-thumb{background:#3b82f6;}
@@ -216,7 +226,7 @@ input[type=search]::placeholder{color:var(--muted);}
 .ev-header { font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:7px; display:flex; align-items:center; gap:6px; font-weight:700; }
 .ev-header::after { content:''; flex:1; height:1px; background:rgba(0,0,0,.08); }
 .ev-list { list-style:none; display:flex; flex-direction:column; gap:5px; }
-.ev-item { position:relative; }
+.ev-item { position:relative; cursor:pointer; }
 .ev-link-row { display:flex; align-items:center; gap:6px; }
 .ev-icon { width:12px; height:12px; opacity:.7; flex-shrink:0; color:var(--cc,var(--accent)); }
 .ev-link { color:var(--text-dim); text-decoration:none; font-size:12px; font-weight:600; font-family:'IBM Plex Mono',monospace; transition:color .15s; }
@@ -224,7 +234,8 @@ input[type=search]::placeholder{color:var(--muted);}
 .ev-desc { display:none; font-size:11.5px; color:var(--text-dim); line-height:1.45; margin-left:18px; padding:5px 9px; background:rgba(0,0,0,.04); border-radius:3px; border-left:2px solid rgba(0,0,0,.08); margin-top:3px; }
 .ev-item:hover .ev-desc, .ev-item.ev-open .ev-desc { display:block; }
 /* small expand indicator */
-.ev-link::after { content:' ›'; opacity:.35; font-size:10px; }
+.ev-link::after { content:' ›'; opacity:.35; font-size:10px; transition:transform .15s; display:inline-block; }
+.ev-item.ev-open .ev-link::after { content:' ‹'; opacity:.6; }
 
 /* INFO TOOLTIP (COST & FEASIBILITY) */
 .info-wrap { position: relative; display: inline-flex; align-items: center; margin-left: 6px; cursor: pointer; vertical-align: middle; }
@@ -445,6 +456,14 @@ input[type=search]::placeholder{color:var(--muted);}
   .fchips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
   .fchips::-webkit-scrollbar { height: 2px; }
   .fchips::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 1px; }
+
+  /* Range sliders go full width */
+  .range-wrap { width: 100%; flex-basis: 100%; gap: 10px; }
+  input[type=range] { max-width: none; }
+  .range-out { min-width: 50px; font-size: 12px; }
+
+  /* RW sort buttons: condense labels */
+  .sbtn.rw-sort-chip[data-sort="rw-asc"] { display: none; }
 }
 </style>
 </head>
@@ -551,6 +570,26 @@ input[type=search]::placeholder{color:var(--muted);}
 <div class="grid" id="grid"></div>
 
 <script>
+// ── Safe localStorage wrapper (survives iOS Safari Private Mode) ──────────
+const LS = (function() {
+  try {
+    const k = '__ls_test__';
+    localStorage.setItem(k, '1');
+    localStorage.removeItem(k);
+    return {
+      get: function(key) { try { return localStorage.getItem(key); } catch(e) { return null; } },
+      set: function(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
+    };
+  } catch(e) {
+    // Fallback: in-memory store (data lost on page close, but no crashes)
+    const mem = {};
+    return {
+      get: function(key) { return Object.prototype.hasOwnProperty.call(mem, key) ? mem[key] : null; },
+      set: function(key, val) { mem[key] = val; }
+    };
+  }
+})();
+
 const ICONS = {
   news: `<svg class="ev-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path d="M14 14H7v2h7v-2zm3-4H7v2h10v-2zm0-4H7v2h10V6z"/></svg>`,
   academic: `<svg class="ev-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>`,
@@ -1030,14 +1069,14 @@ const VOTER_ID_KEY = 'fog_voter_id';
 
 // ── Persistent anonymous voter identity (UUID stored in localStorage) ──────
 function getVoterId() {
-  let id = localStorage.getItem(VOTER_ID_KEY);
+  let id = LS.get(VOTER_ID_KEY);
   if (!id) {
     // Generate a random UUID v4
     id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
       const r = Math.random() * 16 | 0;
       return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
-    localStorage.setItem(VOTER_ID_KEY, id);
+    LS.set(VOTER_ID_KEY, id);
   }
   return id;
 }
@@ -1048,8 +1087,8 @@ function setLiveIndicator(on) {
 
 // ── Load all votes on boot (cache → Supabase) ─────────────────────────────
 async function loadVotes() {
-  // Render instantly from localStorage cache while network request runs
-  const cached = localStorage.getItem(VOTES_LS_KEY);
+  // Render instantly from LS cache while network request runs
+  const cached = LS.get(VOTES_LS_KEY);
   if (cached) {
     try {
       const p = JSON.parse(cached);
@@ -1083,10 +1122,10 @@ async function loadVotes() {
       });
     }
 
-    // Refresh localStorage cache
+    // Refresh LS cache
     const lv = {};
     DATA.forEach(d => { lv[d.id] = d.votes; });
-    localStorage.setItem(VOTES_LS_KEY, JSON.stringify(lv));
+    LS.set(VOTES_LS_KEY, JSON.stringify(lv));
     setLiveIndicator(true);
     rf();
   } catch(e) {
@@ -1185,9 +1224,9 @@ document.getElementById('grid').addEventListener('click', async (e) => {
     }
 
     // Update cache
-    const lv = JSON.parse(localStorage.getItem(VOTES_LS_KEY) || '{}');
+    const lv = JSON.parse(LS.get(VOTES_LS_KEY) || '{}');
     lv[id] = item.votes;
-    localStorage.setItem(VOTES_LS_KEY, JSON.stringify(lv));
+    LS.set(VOTES_LS_KEY, JSON.stringify(lv));
 
     if (aSort === 'votes-desc') rf();
     else updateVoteUI(voteWrap, item);
@@ -1637,14 +1676,15 @@ function applyView(mode) {
   gridEl.classList.toggle('view-list', mode === 'list');
   vtList.classList.toggle('active', mode === 'list');
   vtGrid.classList.toggle('active', mode === 'grid');
-  localStorage.setItem(VIEW_KEY, mode);
+  LS.set(VIEW_KEY, mode);
 }
 
 vtList.addEventListener('click', () => applyView('list'));
 vtGrid.addEventListener('click', () => applyView('grid'));
 
-// Restore last-used view (default: list)
-applyView(localStorage.getItem(VIEW_KEY) || 'list');
+// Restore last-used view — default: grid on mobile (< 768px), list on desktop
+const _defaultView = window.innerWidth < 768 ? 'grid' : 'list';
+applyView(LS.get(VIEW_KEY) || _defaultView);
   
 // ── INFO TOOLTIP — click toggle + overflow-safe repositioning ─────────────
 document.addEventListener('click', e => {
@@ -1737,6 +1777,16 @@ document.getElementById('grid').addEventListener('click', e => {
   const img = slide.querySelector('img');
   if (img) openLightbox(img.src, slide.closest('.card')?.querySelector('.cname')?.textContent);
 });
+
+// Touch-friendly evidence description toggle — tap row to expand/collapse
+// (CSS :hover doesn't fire reliably on touch; ev-open class handles it)
+document.getElementById('grid').addEventListener('click', e => {
+  // Don't intercept link clicks
+  if (e.target.closest('a')) return;
+  const item = e.target.closest('.ev-item');
+  if (!item) return;
+  item.classList.toggle('ev-open');
+}, { passive: true });
 
 // Close on backdrop click or close button
 lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
