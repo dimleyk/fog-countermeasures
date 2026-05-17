@@ -729,7 +729,9 @@ function updateRWSlider(){
   rf();
 }
 rwSl.oninput=updateRWSlider;
-updateRWSlider(); // init track colour
+// Init: set track colour only — do NOT call rf() here because INFOGRAPHICS
+// is declared below this point and would be in the temporal dead zone (const)
+{ const _c=RW_COLS[0]; rwSl.style.background=`linear-gradient(to right,${_c} 0%,${_c} 0%,var(--border) 0%,var(--border) 100%)`; }
 
 document.querySelectorAll('.sbtn').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.sbtn').forEach(x=>x.classList.remove('active'));
