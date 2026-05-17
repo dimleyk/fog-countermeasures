@@ -220,21 +220,24 @@ input[type=search]::placeholder{color:var(--muted);}
 .carousel-slide.cs-infog{cursor:zoom-in;}
 
 /* EVIDENCE STYLING */
-/* ── EVIDENCE SECTION — compact chip layout ─────────────────────────────── */
+/* ── EVIDENCE SECTION ────────────────────────────────────────────────────── */
 .cevid { margin-top:6px; border-radius:5px; padding:9px 11px; border-left:2px solid var(--cc,var(--accent)); border:1px solid rgba(0,0,0,.06); border-left-width:2px; background:rgba(0,0,0,.015); }
 .ev-header { font-family:'IBM Plex Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:7px; display:flex; align-items:center; gap:6px; font-weight:700; }
 .ev-header::after { content:''; flex:1; height:1px; background:rgba(0,0,0,.08); }
-.ev-list { list-style:none; display:flex; flex-direction:column; gap:5px; }
-.ev-item { position:relative; cursor:pointer; }
-.ev-link-row { display:flex; align-items:center; gap:6px; }
-.ev-icon { width:12px; height:12px; opacity:.7; flex-shrink:0; color:var(--cc,var(--accent)); }
+.ev-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.ev-item { position:relative; }
+.ev-link-row { display:flex; align-items:flex-start; gap:6px; }
+.ev-icon { width:12px; height:12px; opacity:.7; flex-shrink:0; color:var(--cc,var(--accent)); margin-top:2px; }
 .ev-link { color:var(--text-dim); text-decoration:none; font-size:12px; font-weight:600; font-family:'IBM Plex Mono',monospace; transition:color .15s; }
 .ev-link:hover { color:var(--accent); text-decoration:underline; }
-.ev-desc { display:none; font-size:11.5px; color:var(--text-dim); line-height:1.45; margin-left:18px; padding:5px 9px; background:rgba(0,0,0,.04); border-radius:3px; border-left:2px solid rgba(0,0,0,.08); margin-top:3px; }
-.ev-item:hover .ev-desc, .ev-item.ev-open .ev-desc { display:block; }
-/* small expand indicator */
-.ev-link::after { content:' ›'; opacity:.35; font-size:10px; transition:transform .15s; display:inline-block; }
-.ev-item.ev-open .ev-link::after { content:' ‹'; opacity:.6; }
+/* Description always visible below the link */
+.ev-desc { font-size:11.5px; color:var(--muted); line-height:1.5; margin-left:18px; margin-top:3px; }
+/* Items beyond the cap are hidden until "show more" is clicked */
+.ev-collapsed { display:none; }
+/* "Show N more / Show less" toggle */
+.ev-more { margin-top:4px; }
+.ev-more-btn { background:none; border:none; cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; color:var(--cc,var(--accent)); padding:2px 0; letter-spacing:.5px; transition:opacity .15s; }
+.ev-more-btn:hover { opacity:.65; }
 
 /* INFO TOOLTIP (COST & FEASIBILITY) */
 .info-wrap { position: relative; display: inline-flex; align-items: center; margin-left: 6px; cursor: pointer; vertical-align: middle; }
@@ -1372,23 +1375,29 @@ function render(items){
     const ctL=CTIERS[d.ct]||'?';
     const ctC=TCOL[ctL]||'#64748b';
 
+    const EV_CAP = 3;
     const evHtml = d.ev && d.ev.length > 0
-      ? `<div class="cevid" style="--cc:${col}">
-           <div class="ev-header">Evidence &amp; Key Findings</div>
-           <ul class="ev-list">
-             ${d.ev.map(link => `
-               <li class="ev-item">
-                 <div class="ev-link-row">
-                   ${ICONS[link.type] || link.type}
-                   <a href="${link.u}" target="_blank" class="ev-link" style="color:${col}">${link.t}</a>
-                 </div>
-                 <div class="ev-desc">
-                   ${link.d}
-                 </div>
-               </li>
-             `).join('')}
-           </ul>
-         </div>`
+      ? (() => {
+          const mkItem = (link, hidden) => `
+            <li class="ev-item${hidden ? ' ev-collapsed' : ''}">
+              <div class="ev-link-row">
+                ${ICONS[link.type] || link.type}
+                <a href="${link.u}" target="_blank" rel="noopener" class="ev-link" style="color:${col}">${link.t}</a>
+              </div>
+              <div class="ev-desc">${link.d}</div>
+            </li>`;
+          const extra = d.ev.length - EV_CAP;
+          const moreBtn = extra > 0
+            ? `<li class="ev-more"><button class="ev-more-btn" onclick="toggleEvMore(this)">+ ${extra} more source${extra > 1 ? 's' : ''}</button></li>`
+            : '';
+          return `<div class="cevid" style="--cc:${col}">
+            <div class="ev-header">Evidence &amp; Key Findings</div>
+            <ul class="ev-list">
+              ${d.ev.map((link, idx) => mkItem(link, idx >= EV_CAP)).join('')}
+              ${moreBtn}
+            </ul>
+          </div>`;
+        })()
       : '';
 
     let bdHtml = '';
@@ -1714,6 +1723,19 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ── Evidence "show more / show less" toggle ───────────────────────────────
+function toggleEvMore(btn) {
+  const list = btn.closest('.ev-list');
+  const collapsed = list.querySelectorAll('.ev-collapsed');
+  const expanded = btn.dataset.open === '1';
+  collapsed.forEach(el => { el.style.display = expanded ? '' : 'list-item'; });
+  const extra = collapsed.length;
+  btn.textContent = expanded
+    ? `+ ${extra} more source${extra > 1 ? 's' : ''}`
+    : '− Show less';
+  btn.dataset.open = expanded ? '' : '1';
+}
+
 function escHtml(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -1837,15 +1859,6 @@ document.getElementById('grid').addEventListener('click', e => {
   if (img) openLightbox(img.src, slide.closest('.card')?.querySelector('.cname')?.textContent);
 });
 
-// Touch-friendly evidence description toggle — tap row to expand/collapse
-// (CSS :hover doesn't fire reliably on touch; ev-open class handles it)
-document.getElementById('grid').addEventListener('click', e => {
-  // Don't intercept link clicks
-  if (e.target.closest('a')) return;
-  const item = e.target.closest('.ev-item');
-  if (!item) return;
-  item.classList.toggle('ev-open');
-}, { passive: true });
 
 // Close on backdrop click or close button
 lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
