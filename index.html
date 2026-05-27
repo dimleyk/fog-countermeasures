@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>FOG Countermeasures — 55 Innovative Solutions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -367,10 +367,25 @@ input[type=search]::placeholder{color:var(--muted);}
 .sb-dot.live{background:#059669;box-shadow:0 0 0 3px rgba(5,150,105,.2);}
 
 /* scan-line removed — plain background */
-/* Disable lift-on-hover on touch devices */
+/* Disable lift-on-hover on touch devices; add tactile :active feedback instead */
 @media (hover: none) {
   .card:hover { transform: none; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
   .card:hover::before { opacity: 0; }
+  .card:active { transform: scale(0.992); border-color: var(--border-hi); }
+  /* Sub-card header press state */
+  .crw-header:active,
+  .chfe-header:active { background: rgba(0,0,0,.07) !important; }
+  /* Vote button press */
+  .vbtn:active { transform: scale(0.85); }
+  /* Carousel nav press */
+  .car-nav:active { transform: translateY(-50%) scale(0.9); }
+  /* Larger touch targets for all interactive sub-card headers */
+  .crw-header,
+  .chfe-header { min-height: 44px; }
+  .cc-toggle { min-height: 40px; }
+  .ev-more-btn { min-height: 36px; padding: 8px 0; }
+  /* Remove 300ms tap delay on buttons/links */
+  button, a, [onclick] { touch-action: manipulation; }
 }
 
 /* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
@@ -441,10 +456,20 @@ input[type=search]::placeholder{color:var(--muted);}
   .grid.view-list .ccarousel iframe { height: 160px; min-height: unset; }
   .grid.view-list .ccomments { grid-column: 1; }
 
+  /* Card header — allow badge to wrap on narrow tablets */
+  .ch { flex-wrap: wrap; }
+  .ccat { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+
   /* RW sub-card */
   .crw-header { padding: 9px 12px; gap: 7px; }
   .crw-label { font-size: 10px; }
   .crw-score-bar { max-width: 60px; }
+
+  /* HFE sub-card */
+  .chfe-header { padding: 9px 12px; gap: 7px; }
+  .chfe-subtitle { font-size: 9.5px; }
+  .chfe-body { padding: 10px 12px 12px; }
+  .chfe-note { font-size: 12px; }
 
   /* Comments */
   .cc-form { flex-direction: column; }
@@ -508,30 +533,39 @@ input[type=search]::placeholder{color:var(--muted);}
 
   /* Card */
   .card { padding: 14px 13px; gap: 9px; }
-  .ch { gap: 8px; }
+  /* Card header: stack badge below number+name if needed */
+  .ch { gap: 8px; flex-wrap: wrap; align-items: flex-start; }
   .cnum { font-size: 13px; }
+  .ccat { font-size: 9.5px; letter-spacing: 1px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
   .cname { font-size: 17px; letter-spacing: 0.5px; }
   .cdesc { font-size: 13px; line-height: 1.6; }
   .cfoot { grid-template-columns: 1fr; gap: 7px; margin-top: 2px; padding-top: 10px; }
   .mlabel { font-size: 9.5px; }
   .mval { font-size: 11.5px; }
   .cbadge { font-size: 11px; }
+  /* Feasibility bar */
+  .fbar { max-width: 100%; }
 
-  /* Vote widget */
+  /* Vote widget — bigger tap targets */
   .vcnt { font-size: 22px; }
-  .vbtn { width: 32px; height: 28px; }
-  .cvote { padding: 5px 8px; min-width: 50px; }
+  .vbtn { width: 36px; height: 34px; border-radius: 7px; }
+  .cvote { padding: 5px 9px; min-width: 54px; }
 
   /* Evidence */
-  .ev-desc { margin-left: 0; }
+  .cevid { padding: 8px 10px; }
+  .ev-desc { margin-left: 0; font-size: 11px; }
   .ev-link { font-size: 11.5px; }
+  .ev-link-row { gap: 5px; }
+  .ev-more-btn { padding: 8px 0; font-size: 11.5px; min-height: 36px; display: block; }
 
-  /* Carousel */
+  /* Carousel — taller on portrait phones, bigger nav buttons */
   .carousel-slide .cs-img,
   .carousel-slide iframe { height: 210px; }
+  .car-nav { width: 36px; height: 36px; font-size: 22px; }
+  .car-strip-item { width: 48px; height: 34px; }
 
   /* RW sub-card */
-  .crw-header { padding: 8px 10px; gap: 6px; }
+  .crw-header { padding: 8px 10px; gap: 6px; min-height: 44px; }
   .crw-tag { display: none; }
   .crw-score-bar { display: none; }
   .crw-label { font-size: 9.5px; }
@@ -539,21 +573,56 @@ input[type=search]::placeholder{color:var(--muted);}
   .crw-body { padding: 10px 12px 12px; }
   .crw-notes { font-size: 12px; }
   .crw-ev-link { font-size: 11px; }
-  .crw-ev-desc { font-size: 11px; margin-left: 0; }
+  .crw-ev-desc { font-size: 11px; margin-left: 0; padding: 4px 8px; }
+
+  /* HFE sub-card */
+  .chfe-header { padding: 8px 10px; gap: 6px; min-height: 44px; }
   .chfe-tag { display: none; }
-  .chfe-subtitle { font-size: 9.5px; }
+  .chfe-subtitle { font-size: 9.5px; max-width: calc(100% - 40px); }
   .chfe-body { padding: 10px 12px 12px; }
-  .chfe-note { font-size: 12px; }
+  .chfe-notes { gap: 5px; margin-bottom: 8px; }
+  .chfe-note { font-size: 12px; gap: 6px; }
   .chfe-ev-link { font-size: 11px; }
-  .chfe-ev-desc { font-size: 11px; margin-left: 0; }
+  .chfe-ev-desc { font-size: 11px; margin-left: 0; padding: 4px 8px; }
+
+  /* Comments toggle touch target */
+  .cc-toggle { min-height: 40px; padding: 4px 0; }
+  .cc-input { font-size: 14px; } /* prevent iOS auto-zoom */
 }
 
 /* ── Very small / iPhone SE ≤375px ────────────────────────────────────── */
 @media (max-width: 375px) {
-  .card { padding: 12px 11px; }
-  .cname { font-size: 16px; }
+  .card { padding: 12px 11px; gap: 8px; }
+  .cnum { font-size: 12px; }
+  .cname { font-size: 16px; letter-spacing: 0; }
+  .cdesc { font-size: 12.5px; }
+  .ccat { font-size: 9px; letter-spacing: 0.5px; max-width: 120px; }
   .chip { padding: 4px 8px; font-size: 9px; }
   .sbtn { padding: 4px 8px; font-size: 9.5px; }
+  /* Vote */
+  .vbtn { width: 34px; height: 32px; }
+  .vcnt { font-size: 20px; }
+  .cvote { padding: 4px 8px; min-width: 48px; }
+  /* Sub-card headers — keep full-width, comfortable tap area */
+  .crw-header,
+  .chfe-header { padding: 8px 9px; gap: 5px; }
+  .crw-score-num { font-size: 11px; }
+  .chfe-subtitle { font-size: 9px; }
+  /* Body text */
+  .crw-notes,
+  .chfe-note { font-size: 11.5px; }
+  .crw-ev-desc,
+  .chfe-ev-desc { font-size: 10.5px; }
+  /* Footer */
+  .cfoot { gap: 6px; padding-top: 8px; }
+  .mlabel { font-size: 9px; letter-spacing: 1px; }
+  /* Carousel */
+  .carousel-slide .cs-img,
+  .carousel-slide iframe { height: 180px; }
+  .car-nav { width: 32px; height: 32px; font-size: 20px; }
+  /* Evidence */
+  .ev-desc { font-size: 10.5px; }
+  .ev-link { font-size: 11px; }
 }
 </style>
 </head>
