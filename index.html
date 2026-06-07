@@ -165,25 +165,25 @@ input[type=search]::placeholder{color:var(--muted);}
 .vtbtn.active{background:var(--accent);color:#fff;}
 
 /* CARD */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-card);padding:24px;position:relative;transition:all .2s;display:flex;flex-direction:column;gap:14px;box-shadow:0 2px 10px rgba(0,0,0,0.04);}
-.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--cc,var(--accent));opacity:0;transition:opacity .2s;border-radius:var(--radius-card) var(--radius-card) 0 0;}
-.card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.09);z-index:10;}
+.card{background:var(--card);border:2px solid var(--border-hi);border-radius:var(--radius-card);padding:24px;position:relative;transition:all .2s;display:flex;flex-direction:column;gap:14px;box-shadow:0 4px 16px rgba(0,0,0,0.07);}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--cc,var(--accent));opacity:1;transition:opacity .2s;border-radius:var(--radius-card) var(--radius-card) 0 0;}
+.card:hover{border-color:var(--cc,var(--accent));transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.12);z-index:10;}
 .card:hover::before{opacity:1;}
-.ch{display:flex;align-items:flex-start;gap:12px;}
-.cnum{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1.5px;flex-shrink:0;padding-top:6px;font-weight:600;}
-.ccat{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:var(--radius-badge);white-space:nowrap;margin-top:2px;font-weight:700;}
+.ch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.cnum{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:1.5px;flex-shrink:0;font-weight:600;}
+.ccat{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 11px;border-radius:var(--radius-badge);white-space:nowrap;font-weight:700;}
 
-/* ENHANCED VOTE COMPONENT */
-.cvote{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--border);border-radius:12px;padding:7px 11px;margin-left:auto;background:var(--surface);min-width:58px;flex-shrink:0;position:relative;overflow:visible;transition:border-color .15s, box-shadow .15s;}
-.cvote:hover{border-color:var(--border-hi);box-shadow:0 2px 12px rgba(0,0,0,.07);}
-.vbtn{background:none;border:1px solid transparent;color:var(--muted);cursor:pointer;padding:5px 8px;border-radius:7px;transition:all .15s;line-height:1;width:38px;height:32px;display:flex;align-items:center;justify-content:center;}
+/* ENHANCED VOTE COMPONENT — horizontal +/− layout */
+.cvote{display:flex;flex-direction:row;align-items:center;gap:4px;border:1px solid var(--border);border-radius:8px;padding:4px 6px;margin-left:auto;background:var(--surface);flex-shrink:0;position:relative;overflow:visible;transition:border-color .15s, box-shadow .15s;}
+.cvote:hover{border-color:var(--border-hi);box-shadow:0 2px 10px rgba(0,0,0,.07);}
+.vbtn{background:none;border:1px solid transparent;color:var(--muted);cursor:pointer;padding:0;border-radius:6px;transition:all .15s;line-height:1;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;}
 .vbtn.v-up:hover{color:#059669;background:rgba(5,150,105,.09);border-color:rgba(5,150,105,.3);}
 .vbtn.v-down:hover{color:#ef4444;background:rgba(239,68,68,.09);border-color:rgba(239,68,68,.3);}
 .vbtn.v-up.voted{color:#fff;background:#059669;border-color:#059669;}
 .vbtn.v-up.voted:hover{background:#047857;border-color:#047857;}
 .vbtn.v-down.voted{color:#fff;background:#ef4444;border-color:#ef4444;}
 .vbtn.v-down.voted:hover{background:#dc2626;border-color:#dc2626;}
-.vcnt{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;min-width:36px;text-align:center;transition:color .2s, transform .15s;}
+.vcnt{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;min-width:26px;text-align:center;transition:color .2s, transform .15s;}
 .cname{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1.5px;color:var(--text);line-height:1.2;}
 .cdesc{font-size:15px;line-height:1.75;color:var(--text-dim);flex:1;}
 
@@ -223,20 +223,24 @@ input[type=search]::placeholder{color:var(--muted);}
 
 /* EVIDENCE STYLING */
 /* ── EVIDENCE SECTION ────────────────────────────────────────────────────── */
-.cevid { margin-top:6px; border-radius:6px; padding:11px 13px; border-left:3px solid var(--cc,var(--accent)); border:1px solid rgba(0,0,0,.07); border-left-width:3px; background:rgba(0,0,0,.018); }
-.ev-header { font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:9px; display:flex; align-items:center; gap:6px; font-weight:700; }
-.ev-header::after { content:''; flex:1; height:1px; background:rgba(0,0,0,.08); }
-.ev-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.cevid { margin-top:4px; border-radius:8px; border:1px solid var(--border); background:var(--surface); overflow:hidden; }
+.ev-header { font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); display:flex; align-items:center; gap:8px; font-weight:700; padding:11px 14px; cursor:pointer; user-select:none; transition:background .15s; min-height:42px; }
+.ev-header:hover { background:rgba(0,0,0,.035); }
+.ev-header-icon { width:15px; height:15px; color:var(--cc,var(--accent)); flex-shrink:0; opacity:.8; }
+.ev-header-label { flex:1; }
+.ev-count { font-family:'IBM Plex Mono',monospace; font-size:10px; background:color-mix(in srgb,var(--cc,var(--accent)) 15%,transparent); color:var(--cc,var(--accent)); border-radius:10px; padding:2px 7px; font-weight:700; }
+.ev-chevron { width:14px; height:14px; color:var(--muted); flex-shrink:0; transition:transform .2s; }
+.cevid.open .ev-chevron { transform:rotate(180deg); }
+.ev-body { display:none; padding:4px 14px 13px; border-top:1px solid var(--border); }
+.cevid.open .ev-body { display:block; }
+.ev-list { list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:10px; }
 .ev-item { position:relative; }
 .ev-link-row { display:flex; align-items:flex-start; gap:7px; }
 .ev-icon { width:13px; height:13px; opacity:.75; flex-shrink:0; color:var(--cc,var(--accent)); margin-top:2px; }
 .ev-link { color:var(--text-dim); text-decoration:none; font-size:13px; font-weight:600; font-family:'IBM Plex Mono',monospace; transition:color .15s; }
 .ev-link:hover { color:var(--accent); text-decoration:underline; }
-/* Description always visible below the link */
 .ev-desc { font-size:12.5px; color:var(--muted); line-height:1.55; margin-left:20px; margin-top:4px; }
-/* Items beyond the cap are hidden until "show more" is clicked */
 .ev-collapsed { display:none; }
-/* "Show N more / Show less" toggle */
 .ev-more { margin-top:6px; }
 .ev-more-btn { background:none; border:none; cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:700; color:var(--cc,var(--accent)); padding:2px 0; letter-spacing:.5px; transition:opacity .15s; }
 .ev-more-btn:hover { opacity:.65; }
@@ -555,12 +559,13 @@ input[type=search]::placeholder{color:var(--muted);}
   .fbar { max-width: 100%; }
 
   /* Vote widget — bigger tap targets */
-  .vcnt { font-size: 24px; }
-  .vbtn { width: 40px; height: 36px; border-radius: 8px; }
-  .cvote { padding: 6px 10px; min-width: 58px; }
+  .vcnt { font-size: 15px; }
+  .vbtn { width: 34px; height: 34px; border-radius: 7px; font-size: 20px; }
+  .cvote { padding: 4px 6px; }
 
   /* Evidence */
-  .cevid { padding: 10px 12px; }
+  .ev-header { padding: 10px 12px; font-size: 9.5px; }
+  .ev-body { padding: 4px 12px 12px; }
   .ev-desc { margin-left: 4px; font-size: 12px; }
   .ev-link { font-size: 12.5px; }
   .ev-link-row { gap: 6px; }
@@ -608,9 +613,9 @@ input[type=search]::placeholder{color:var(--muted);}
   .chip { padding: 5px 10px; font-size: 10px; }
   .sbtn { padding: 5px 9px; font-size: 10px; }
   /* Vote */
-  .vbtn { width: 36px; height: 32px; }
-  .vcnt { font-size: 22px; }
-  .cvote { padding: 5px 9px; min-width: 52px; }
+  .vbtn { width: 32px; height: 32px; font-size: 18px; }
+  .vcnt { font-size: 14px; }
+  .cvote { padding: 3px 5px; }
   /* Sub-card headers — keep full-width, comfortable tap area */
   .crw-header,
   .chfe-header { padding: 9px 10px; gap: 6px; min-height: 46px; }
@@ -1487,20 +1492,27 @@ function render(items){
             <li class="ev-item${hidden ? ' ev-collapsed' : ''}">
               <div class="ev-link-row">
                 ${ICONS[link.type] || link.type}
-                <a href="${link.u}" target="_blank" rel="noopener" class="ev-link" style="color:${col}">${link.t}</a>
+                <a href="${link.u}" target="_blank" rel="noopener" class="ev-link" style="color:${col}" onclick="event.stopPropagation()">${link.t}</a>
               </div>
               <div class="ev-desc">${link.d}</div>
             </li>`;
           const extra = d.ev.length - EV_CAP;
           const moreBtn = extra > 0
-            ? `<li class="ev-more"><button class="ev-more-btn" onclick="toggleEvMore(this)">+ ${extra} more source${extra > 1 ? 's' : ''}</button></li>`
+            ? `<li class="ev-more"><button class="ev-more-btn" onclick="event.stopPropagation();toggleEvMore(this)">+ ${extra} more source${extra > 1 ? 's' : ''}</button></li>`
             : '';
-          return `<div class="cevid" style="--cc:${col}">
-            <div class="ev-header">Evidence &amp; Key Findings</div>
-            <ul class="ev-list">
-              ${d.ev.map((link, idx) => mkItem(link, idx >= EV_CAP)).join('')}
-              ${moreBtn}
-            </ul>
+          return `<div class="cevid" style="--cc:${col}" onclick="this.classList.toggle('open')">
+            <div class="ev-header">
+              <svg class="ev-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <span class="ev-header-label">Evidence &amp; Key Findings</span>
+              <span class="ev-count">${d.ev.length}</span>
+              <svg class="ev-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="ev-body">
+              <ul class="ev-list">
+                ${d.ev.map((link, idx) => mkItem(link, idx >= EV_CAP)).join('')}
+                ${moreBtn}
+              </ul>
+            </div>
           </div>`;
         })()
       : '';
@@ -1685,24 +1697,16 @@ function render(items){
 
     c.innerHTML=`
       <div class="ch">
-        <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-            <div class="cnum">#${String(d.id+1).padStart(2,'0')}</div>
-            <div class="ccat" style="background:color-mix(in srgb,${col} 14%,transparent);color:${col};border:1px solid color-mix(in srgb,${col} 35%,transparent)">${d.cat}</div>
-          </div>
-          <div class="cname">${d.n}</div>
-        </div>
+        <div class="cnum">#${String(d.id+1).padStart(2,'0')}</div>
+        <div class="ccat" style="background:color-mix(in srgb,${col} 14%,transparent);color:${col};border:1px solid color-mix(in srgb,${col} 35%,transparent)">${d.cat}</div>
         <div class="cvote" data-id="${d.id}">
-          <button class="vbtn v-up${d.myVote===1?' voted':''}" title="${d.myVote===1?'Remove upvote':'Upvote'}">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 4L3 15h18L12 4z"/></svg>
-          </button>
+          <button class="vbtn v-down${d.myVote===-1?' voted':''}" title="${d.myVote===-1?'Remove downvote':'Downvote'}">−</button>
           <span class="vcnt" style="color:${d.votes > 0 ? '#059669' : d.votes < 0 ? '#ef4444' : col}">${d.votes}</span>
-          <button class="vbtn v-down${d.myVote===-1?' voted':''}" title="${d.myVote===-1?'Remove downvote':'Downvote'}">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 20L3 9h18L12 20z"/></svg>
-          </button>
+          <button class="vbtn v-up${d.myVote===1?' voted':''}" title="${d.myVote===1?'Remove upvote':'Upvote'}">+</button>
         </div>
       </div>
       <div class="card-body">
+        <div class="cname">${d.n}</div>
         <div class="cdesc">${d.desc}</div>
         ${evHtml}
         ${rwHtml}
